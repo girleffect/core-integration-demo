@@ -21,17 +21,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', "Wagtail Demo")
 
-# OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
-# OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
+OIDC_RP_CLIENT_ID = "client_id_1"
+OIDC_RP_CLIENT_SECRET = "2a9db46eaca7b963b0f57dbd0c05182dab40f691e80d8cb4b75bd57d"
 
 # <URL of the OIDC OP authorization endpoint>
-# OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
+OIDC_OP_AUTHORIZATION_ENDPOINT = "http://127.0.0.1:8000/openid/authorize/"
 
 # <URL of the OIDC OP token endpoint>
-# OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_OP_TOKEN_ENDPOINT']
+OIDC_OP_TOKEN_ENDPOINT = "http://127.0.0.1:8000/openid/token"
 
 # <URL of the OIDC OP userinfo endpoint>
-# OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
+OIDC_OP_USER_ENDPOINT = "http://127.0.0.1:8000/openid/userinfo/"
 
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15 * 60  # 15 minutes
 
