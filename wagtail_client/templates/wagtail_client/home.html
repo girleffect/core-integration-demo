@@ -7,23 +7,46 @@
 {% block furniture %}
     <div class="content-wrapper">
         {% if user.is_authenticated %}
-            <h1>Welcome back!</h1>
+            <h1>Welcome {{ user.first_name }}!</h1>
             <h1>email: {{ user.email }}</h1>
-            <h1>{{ user }}</h1>
             <div class="submit">
                 <a class="button" href="{% url "logout" %}">Logout</a>
             <div>
+            <br />
+            <div class="submit">
+                <a class="button" href="http://172.18.0.3:8000/profile/edit/?redirect_url=http://172.18.0.4:8000/">Edit Profile</a>
+            <div>
         {% else %}
-            <h1>Welcome to the home page</h1>
+            <h1>Welcome to the demo home page</h1>
+            <h2>Basic demo: Click and go</h2>
+            <p class="help">
+                Login functionality is the same for any user. System users will see an extra step where they need to
+                provide their 2FA token.
+            </p>
+            <br />
             <a class="button" href="{% url 'oidc_authentication_init' %}">Login</a>
+            <br />
+            <br />
+            <p class="help">
+                Registration functionality can be tailored per site. Below we have 2 typical registration buttons, one
+                for "end users" (2FA not required, less required fields) and "system users" (2FA required, more required
+                fields, more stringent password requirements).
+            </p>
+            <br />
+            <div class="submit">
+                <a id="endUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?theme=django&redirect_url=http://172.18.0.4:8000/">Register as an "End User"</a>
+            <div>
+            <br />
+            <div class="submit">
+                <a id="systemUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?security=high&theme=django&requires=first_name&requires=last_name&requires=gender&redirect_url=http://172.18.0.4:8000/">Register as a "System User"</a>
+            <div>
 
             {% comment %}
                 TODO once sure how we want to demo it, a management command should suffice, wagtail can build pages.
             {% endcomment %}
             <br />
             <br />
-            <h2 class="help">Are you a new user? Register here:</h2>
-            <p class="help">Customise your registration experience</p>
+            <h2>Advanced demo: customise the registration experience</h2>
             <div>
                 <p>Toggle some options:</p>
                 <input id="security" type="checkbox" value="security" checked>High security<br>
@@ -36,10 +59,18 @@
                     <option value="ge">Horrid black theme</option>
                     <option value="none">No theme</option>
                 </select>
+                <br />
+                <p>Make some optional fields required:</p>
+                <input id="first_name" type="checkbox" value="first_name">First Name<br>
+                <input id="last_name" type="checkbox" value="last_name">Last name<br>
+                <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
+                <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
+                <input id="gender" type="checkbox" value="gender">Gender<br>
+                <br />
             </div>
             <br />
             <div class="submit">
-                <a id="redirectButton" class="button" href="http://172.18.0.3:8000/registration/?redirect_url=http://172.18.0.4:8000/">Register</a>
+                <a id="customRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?redirect_url=http://172.18.0.4:8000/">Register with custom parameters</a>
             <div>
         {% endif %}
     </div>
@@ -50,7 +81,7 @@
     // Hard coded like this is fine for demo purposes.
     // TODO The redirect urls will need to be updated from context later on.
     document.addEventListener('DOMContentLoaded', function(event) {
-        document.getElementById('redirectButton').addEventListener('click', function(e) {
+        document.getElementById('customRedirectButton').addEventListener('click', function(e) {
             e.preventDefault()
             var href = 'http://172.18.0.3:8000/registration/';
             var theme = document.getElementById('theme').value;
@@ -63,6 +94,21 @@
             }
             if (document.getElementById('redirect').checked) {
                 href += '&redirect_url=http://172.18.0.4:8000/';
+            }
+            if (document.getElementById('first_name').checked) {
+                href += '&requires=first_name';
+            }
+            if (document.getElementById('last_name').checked) {
+                href += '&requires=last_name';
+            }
+            if (document.getElementById('msisdn').checked) {
+                href += '&requires=msisdn';
+            }
+            if (document.getElementById('birth_date').checked) {
+                href += '&requires=birth_date';
+            }
+            if (document.getElementById('gender').checked) {
+                href += '&requires=gender';
             }
             console.info(href);
             window.location.href = href

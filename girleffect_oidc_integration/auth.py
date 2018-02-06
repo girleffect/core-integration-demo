@@ -25,7 +25,14 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         uuid = claims["sub"]
         try:
             kwargs = {USERNAME_FIELD: uuid}
-            return [self.UserModel.objects.get(**kwargs)]
+            user = self.UserModel.objects.get(**kwargs)
+            # Update the user with the latest info
+            print(claims)
+            user.first_name = claims.get("first_name") or claims["nickname"]
+            user.last_name = claims.get("last_name") or ""
+            user.email = claims.get("email")  # Email is optional
+            user.save()
+            return [user]
         except self.UserModel.DoesNotExist:
             LOGGER.debug("Lookup failed based on {}".format(kwargs))
 
@@ -48,11 +55,16 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         the email field is optional.
         We use the user id (called the subscriber identity in OIDC) as the
         username, since it is always available and guaranteed to be unique.
+        We expect that the nickname is always available.
         """
         username = claims["sub"]  # The sub field _must_ be in the claims.
+        nickname = claims["nickname"]
         email = claims.get("email")  # Email is optional
+        user = self.UserModel.objects.create_user(username, email)
+        user.nickname = nickname
+        user.save()
 
-        return self.UserModel.objects.create_user(username, email)
+        return user
 
     def verify_claims(self, claims):
         """
