@@ -21,7 +21,6 @@ def _update_user_from_claims(user, claims):
     :param user: The user profile
     :param claims: The claims for the profile
     """
-    print(claims)
     user.first_name = claims.get("given_name") or claims["nickname"]
     user.last_name = claims.get("family_name") or ""
     user.email = claims.get("email")  # Email is optional
@@ -67,7 +66,6 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         the email field is optional.
         We use the user id (called the subscriber identity in OIDC) as the
         username, since it is always available and guaranteed to be unique.
-        We expect that the nickname is always available.
         """
         username = claims["sub"]  # The sub field _must_ be in the claims.
         email = claims.get("email")  # Email is optional
