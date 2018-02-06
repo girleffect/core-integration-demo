@@ -24,6 +24,9 @@ WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', "Wagtail Demo")
 OIDC_RP_CLIENT_ID = "client_id_1"
 OIDC_RP_CLIENT_SECRET = "2a9db46eaca7b963b0f57dbd0c05182dab40f691e80d8cb4b75bd57d"
 
+# The scopes that this application will request access to.
+OIDC_RP_SCOPES = 'openid profile email address phone site'
+
 # <URL of the OIDC OP authorization endpoint>
 OIDC_OP_AUTHORIZATION_ENDPOINT = "http://127.0.0.1:8000/openid/authorize/"
 
