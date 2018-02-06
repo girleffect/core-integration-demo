@@ -23,7 +23,7 @@ def _update_user_from_claims(user, claims):
     """
     user.first_name = claims.get("given_name") or claims["nickname"]
     user.last_name = claims.get("family_name") or ""
-    user.email = claims.get("email")  # Email is optional
+    user.email = claims.get("email") or ""
     user.save()
 
 
