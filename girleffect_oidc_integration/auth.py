@@ -12,6 +12,21 @@ EMAIL_FIELD = "email"
 LOGGER = logging.getLogger(__name__)
 
 
+def _update_user_from_claims(user, claims):
+    """
+    Update the user profile with information from the claims.
+    This function is called on registration (new user) as well as login events.
+    This function provides the mapping from the OIDC claims fields to the
+    internal user profile fields.
+    :param user: The user profile
+    :param claims: The claims for the profile
+    """
+    user.first_name = claims.get("given_name") or claims["nickname"]
+    user.last_name = claims.get("family_name") or ""
+    user.email = claims.get("email") or ""
+    user.save()
+
+
 class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
 
     def filter_users_by_claims(self, claims):
@@ -25,7 +40,10 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         uuid = claims["sub"]
         try:
             kwargs = {USERNAME_FIELD: uuid}
-            return [self.UserModel.objects.get(**kwargs)]
+            user = self.UserModel.objects.get(**kwargs)
+            # Update the user with the latest info
+            _update_user_from_claims(user, claims)
+            return [user]
         except self.UserModel.DoesNotExist:
             LOGGER.debug("Lookup failed based on {}".format(kwargs))
 
@@ -51,8 +69,10 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         """
         username = claims["sub"]  # The sub field _must_ be in the claims.
         email = claims.get("email")  # Email is optional
-
-        return self.UserModel.objects.create_user(username, email)
+        # We create the user based on the username and optional email fields.
+        user = self.UserModel.objects.create_user(username, email)
+        _update_user_from_claims(user, claims)
+        return user
 
     def verify_claims(self, claims):
         """
