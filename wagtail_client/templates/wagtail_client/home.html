@@ -63,6 +63,7 @@
                 <p>Make some optional fields required:</p>
                 <input id="first_name" type="checkbox" value="first_name">First Name<br>
                 <input id="last_name" type="checkbox" value="last_name">Last name<br>
+                <input id="nickname" type="checkbox" value="nickname">Nickname<br>
                 <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
                 <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
                 <input id="gender" type="checkbox" value="gender">Gender<br>
@@ -100,6 +101,9 @@
             }
             if (document.getElementById('last_name').checked) {
                 href += '&requires=last_name';
+            }
+            if (document.getElementById('nickname').checked) {
+                href += '&requires=nickname';
             }
             if (document.getElementById('msisdn').checked) {
                 href += '&requires=msisdn';
