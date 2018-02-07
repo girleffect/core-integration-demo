@@ -34,7 +34,7 @@
             </p>
             <br />
             <div class="submit">
-                <a id="endUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?theme=django&hidden=end-user&redirect_url=http://172.18.0.4:8000/">Register as an "End User"</a>
+                <a id="endUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?theme=django&hide=end-user&redirect_url=http://172.18.0.4:8000/">Register as an "End User"</a>
             <div>
             <br />
             <div class="submit">
@@ -130,25 +130,25 @@
             }
             // Hidden fields
             if (document.getElementById('first_name_hide').checked && !document.getElementById('first_name').checked) {
-                href += '&hidden=first_name';
+                href += '&hide=first_name';
             }
             if (document.getElementById('last_name_hide').checked && !document.getElementById('last_name').checked) {
-                href += '&hidden=last_name';
+                href += '&hide=last_name';
             }
             if (document.getElementById('nickname_hide').checked && !document.getElementById('nickname').checked) {
-                href += '&hidden=nickname';
+                href += '&hide=nickname';
             }
             if (document.getElementById('msisdn_hide').checked && !document.getElementById('msisdn').checked) {
-                href += '&hidden=msisdn';
+                href += '&hide=msisdn';
             }
             if (document.getElementById('birth_date_hide').checked && !document.getElementById('birth_date').checked) {
-                href += '&hidden=birth_date';
+                href += '&hide=birth_date';
             }
             if (document.getElementById('gender_hide').checked && !document.getElementById('gender').checked) {
-                href += '&hidden=gender';
+                href += '&hide=gender';
             }
             if (document.getElementById('avatar_hide').checked && !document.getElementById('avatar').checked ) {
-                href += '&hidden=avatar';
+                href += '&hide=avatar';
             }
             console.info(href);
             window.location.href = href
