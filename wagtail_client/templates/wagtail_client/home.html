@@ -34,7 +34,7 @@
             </p>
             <br />
             <div class="submit">
-                <a id="endUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?theme=django&redirect_url=http://172.18.0.4:8000/">Register as an "End User"</a>
+                <a id="endUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?theme=django&hidden=end-user&redirect_url=http://172.18.0.4:8000/">Register as an "End User"</a>
             <div>
             <br />
             <div class="submit">
@@ -67,6 +67,16 @@
                 <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
                 <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
                 <input id="gender" type="checkbox" value="gender">Gender<br>
+                <input id="avatar" type="checkbox" value="avatar">Avatar<br>
+                <br />
+                <p>Hide some optional fields (ones you flagged as required will be ignored):</p>
+                <input id="first_name_hide" type="checkbox" value="first_name_hide">First Name<br>
+                <input id="last_name_hide" type="checkbox" value="last_name_hide">Last name<br>
+                <input id="nickname_hide" type="checkbox" value="nickname_hide">Nickname<br>
+                <input id="msisdn_hide" type="checkbox" value="msisdn_hide">MSISDN<br>
+                <input id="birth_date_hide" type="checkbox" value="birth_date_hide">Birth date<br>
+                <input id="gender_hide" type="checkbox" value="gender_hide">Gender<br>
+                <input id="avatar_hide" type="checkbox" value="avatar_hide">Avatar<br>
                 <br />
             </div>
             <br />
@@ -96,6 +106,7 @@
             if (document.getElementById('redirect').checked) {
                 href += '&redirect_url=http://172.18.0.4:8000/';
             }
+            // Required fields
             if (document.getElementById('first_name').checked) {
                 href += '&requires=first_name';
             }
@@ -113,6 +124,31 @@
             }
             if (document.getElementById('gender').checked) {
                 href += '&requires=gender';
+            }
+            if (document.getElementById('avatar').checked) {
+                href += '&requires=avatar';
+            }
+            // Hidden fields
+            if (document.getElementById('first_name_hide').checked && !document.getElementById('first_name').checked) {
+                href += '&hidden=first_name';
+            }
+            if (document.getElementById('last_name_hide').checked && !document.getElementById('last_name').checked) {
+                href += '&hidden=last_name';
+            }
+            if (document.getElementById('nickname_hide').checked && !document.getElementById('nickname').checked) {
+                href += '&hidden=nickname';
+            }
+            if (document.getElementById('msisdn_hide').checked && !document.getElementById('msisdn').checked) {
+                href += '&hidden=msisdn';
+            }
+            if (document.getElementById('birth_date_hide').checked && !document.getElementById('birth_date').checked) {
+                href += '&hidden=birth_date';
+            }
+            if (document.getElementById('gender_hide').checked && !document.getElementById('gender').checked) {
+                href += '&hidden=gender';
+            }
+            if (document.getElementById('avatar_hide').checked && !document.getElementById('avatar').checked ) {
+                href += '&hidden=avatar';
             }
             console.info(href);
             window.location.href = href
