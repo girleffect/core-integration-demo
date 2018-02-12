@@ -4,6 +4,8 @@ The technical background can be found here:
 https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html#additional-optional-configuration
 """
 import logging
+
+from django.contrib.auth.models import Group
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 USERNAME_FIELD = "username"
@@ -18,13 +20,35 @@ def _update_user_from_claims(user, claims):
     This function is called on registration (new user) as well as login events.
     This function provides the mapping from the OIDC claims fields to the
     internal user profile fields.
+    In this example we use the role names as the names for Django Groups to which a user belongs.
     :param user: The user profile
     :param claims: The claims for the profile
     """
+    LOGGER.debug("Updating user {} with claims: {}".format(user, claims))
+
     user.first_name = claims.get("given_name") or claims["nickname"]
     user.last_name = claims.get("family_name") or ""
     user.email = claims.get("email") or ""
     user.save()
+
+    # Synchronise the roles that the user has. The list of roles may contain more or less roles
+    # than the previous time the user logged in.
+    roles = set(claims.get("roles", []))
+    groups = set(group.name for group in user.groups.all())
+
+    groups_to_add = roles - groups
+    groups_to_remove = groups - roles
+
+    for group_name in groups_to_add:
+        group, created = Group.objects.get_or_create(name=group_name)
+        if created:
+            LOGGER.DEBUG("Created new group: {}".format(group_name))
+        user.groups.add(group)
+    LOGGER.debug("Added groups to user {}: {}".format(user, groups_to_add))
+
+    args = [Group.objects.get(name=group_name) for group_name in groups_to_remove]
+    user.groups.remove(*args)
+    LOGGER.debug("Removed groups from user {}: {}".format(user, groups_to_remove))
 
 
 class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
