@@ -50,6 +50,10 @@ def _update_user_from_claims(user, claims):
     user.groups.remove(*args)
     LOGGER.debug("Removed groups from user {}: {}".format(user, groups_to_remove))
 
+    site_specific_data = claims.get("site")
+    if site_specific_data:
+        LOGGER.debug("Got site specific data: {}".format(site_specific_data))
+
 
 class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
 
