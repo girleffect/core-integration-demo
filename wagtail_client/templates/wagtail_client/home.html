@@ -2,12 +2,22 @@
 {% block titletag %}Sign in{% endblock %}
 {% block extra_css %}
     {{ block.super }}
+    <style>
+    body {
+        background: linear-gradient(white, {{ settings.WAGTAIL_SITE_COLOUR }});
+        background-color: {{ settings.WAGTAIL_SITE_COLOUR }};
+    }
+    .content-wrapper {
+        background: linear-gradient(white, {{ settings.WAGTAIL_SITE_COLOUR }});
+        background-color: {{ settings.WAGTAIL_SITE_COLOUR }};
+    }
+    </style>
 {% endblock %}
 
 {% block furniture %}
     <div class="content-wrapper">
         {% if user.is_authenticated %}
-            <h1>Welcome {{ user.first_name }}!</h1>
+            <h1>Welcome {{ user.first_name }} to the {{ settings.WAGTAIL_SITE_NAME }} home page</h1>
             <h1>E-mail: {{ user.email }}</h1>
             <h1>Roles</h1>
             <ul>
@@ -20,10 +30,10 @@
             <div>
             <br />
             <div class="submit">
-                <a class="button" href="http://172.18.0.3:8000/profile/edit/?redirect_url=http://172.18.0.4:8000/">Edit Profile</a>
+                <a class="button" href="{{ settings.OIDC_OP }}/profile/edit/?redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Edit Profile</a>
             <div>
         {% else %}
-            <h1>Welcome to the demo home page</h1>
+            <h1>Welcome to the {{ site_name }} home page</h1>
             <h2>Basic demo: Click and go</h2>
             <p class="help">
                 Login functionality is the same for any user. System users will see an extra step where they need to
@@ -40,11 +50,11 @@
             </p>
             <br />
             <div class="submit">
-                <a id="endUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?theme=django&hide=end-user&redirect_url=http://172.18.0.4:8000/">Register as an "End User"</a>
+                <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme=django&hide=end-user&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as an "End User"</a>
             <div>
             <br />
             <div class="submit">
-                <a id="systemUserRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?security=high&theme=django&requires=first_name&requires=last_name&requires=gender&redirect_url=http://172.18.0.4:8000/">Register as a "System User"</a>
+                <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme=django&requires=first_name&requires=last_name&requires=gender&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as a "System User"</a>
             <div>
 
             {% comment %}
@@ -87,7 +97,7 @@
             </div>
             <br />
             <div class="submit">
-                <a id="customRedirectButton" class="button" href="http://172.18.0.3:8000/registration/?redirect_url=http://172.18.0.4:8000/">Register with custom parameters</a>
+                <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register with custom parameters</a>
             <div>
         {% endif %}
     </div>
@@ -100,7 +110,7 @@
     document.addEventListener('DOMContentLoaded', function(event) {
         document.getElementById('customRedirectButton').addEventListener('click', function(e) {
             e.preventDefault()
-            var href = 'http://172.18.0.3:8000/registration/';
+            var href = '{{ settings.OIDC_OP }}/registration/';
             var theme = document.getElementById('theme').value;
             href += '?theme=' + theme;
             if (document.getElementById('security').checked) {
@@ -110,7 +120,7 @@
                 href += '&show2fa=true';
             }
             if (document.getElementById('redirect').checked) {
-                href += '&redirect_url=http://172.18.0.4:8000/';
+                href += '&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}';
             }
             // Required fields
             if (document.getElementById('first_name').checked) {
