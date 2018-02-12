@@ -42,7 +42,7 @@ def _update_user_from_claims(user, claims):
     for group_name in groups_to_add:
         group, created = Group.objects.get_or_create(name=group_name)
         if created:
-            LOGGER.DEBUG("Created new group: {}".format(group_name))
+            LOGGER.debug("Created new group: {}".format(group_name))
         user.groups.add(group)
     LOGGER.debug("Added groups to user {}: {}".format(user, groups_to_add))
 
