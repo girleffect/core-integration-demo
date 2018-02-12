@@ -25,7 +25,7 @@ OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
 
 # The scopes that this application will request access to.
-OIDC_RP_SCOPES = 'openid profile email address phone site'
+OIDC_RP_SCOPES = 'openid profile email address phone site roles'
 
 # <URL of the OIDC OP authorization endpoint>
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
@@ -181,3 +181,24 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'girleffect_oidc_integration': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'propagate': True,
+        },
+    },
+}
