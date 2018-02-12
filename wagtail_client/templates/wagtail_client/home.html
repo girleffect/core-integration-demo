@@ -12,7 +12,11 @@
             {% if user.groups %}
                 <div>
                     <h3>Your roles:</h3>
-                    {{ user.groups.all }}
+                    <ul>
+                        {% for role in user.groups.all %}
+                            <li>{{ role }}</li>
+                        {% endfor %}
+                    </ul>
                 </div>
             {% endif %}
             <div class="submit">
