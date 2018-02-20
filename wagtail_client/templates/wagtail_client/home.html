@@ -1,15 +1,33 @@
 {% extends "wagtailadmin/admin_base.html" %}
-{% block titletag %}Sign in{% endblock %}
+{% block titletag %}
+    {% if user.is_authenticated %}
+        Home page
+    {% else %}
+        Sign in
+    {% endif %}
+{% endblock %}
 {% block extra_css %}
     {{ block.super }}
     <style>
+    h2 {
+        color: black;
+    }
     body {
-        background: linear-gradient(white, {{ settings.WAGTAIL_SITE_COLOUR }});
-        background-color: {{ settings.WAGTAIL_SITE_COLOUR }};
+        background: linear-gradient(grey, {{ settings.WAGTAIL_SITE_COLOUR }});
+    }
+    .wrapper {
+        padding: 0;
+        margin-left: 10%;
+        margin-right:10%;
     }
     .content-wrapper {
-        background: linear-gradient(white, {{ settings.WAGTAIL_SITE_COLOUR }});
-        background-color: {{ settings.WAGTAIL_SITE_COLOUR }};
+        background: transparent;
+        color: black;
+        object-position: center;
+    }
+    .button {
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
     </style>
 {% endblock %}
@@ -17,7 +35,7 @@
 {% block furniture %}
     <div class="content-wrapper">
         {% if user.is_authenticated %}
-            <h1>Welcome {{ user.first_name }} to the {{ settings.WAGTAIL_SITE_NAME }} home page</h1>
+            <h1>Welcome <i>{{ user.first_name }}</i> to the {{ settings.WAGTAIL_SITE_NAME }} home page</h1>
             <h1>E-mail: {{ user.email }}</h1>
             <h1>Roles</h1>
             <ul>
@@ -28,31 +46,25 @@
             <div class="submit">
                 <a class="button" href="{% url "logout" %}">Logout</a>
             <div>
-            <br />
             <div class="submit">
                 <a class="button" href="{{ settings.OIDC_OP }}/profile/edit/?redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Edit Profile</a>
             <div>
         {% else %}
             <h1>Welcome to the {{ site_name }} home page</h1>
             <h2>Basic demo: Click and go</h2>
-            <p class="help">
+            <p>
                 Login functionality is the same for any user. System users will see an extra step where they need to
                 provide their 2FA token.
             </p>
-            <br />
             <a class="button" href="{% url 'oidc_authentication_init' %}">Login</a>
-            <br />
-            <br />
-            <p class="help">
+            <p>
                 Registration functionality can be tailored per site. Below we have 2 typical registration buttons, one
                 for "end users" (2FA not required, less required fields) and "system users" (2FA required, more required
                 fields, more stringent password requirements).
             </p>
-            <br />
             <div class="submit">
                 <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme=django&hide=end-user&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as an "End User"</a>
             <div>
-            <br />
             <div class="submit">
                 <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme=django&requires=first_name&requires=last_name&requires=gender&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as a "System User"</a>
             <div>
@@ -60,22 +72,18 @@
             {% comment %}
                 TODO once sure how we want to demo it, a management command should suffice, wagtail can build pages.
             {% endcomment %}
-            <br />
-            <br />
             <h2>Advanced demo: customise the registration experience</h2>
             <div>
                 <p>Toggle some options:</p>
                 <input id="security" type="checkbox" value="security" checked>High security<br>
                 <input id="show2fa" type="checkbox" value="show2fa">Show two factor auth<br>
                 <input id="redirect" type="checkbox" value="redirect" checked>Redirect back here?<br>
-                <br />
                 <p>Pick a theme:</p>
                 <select id="theme">
                     <option value="django">Django theme</option>
                     <option value="ge">Horrid black theme</option>
                     <option value="none">No theme</option>
                 </select>
-                <br />
                 <p>Make some optional fields required:</p>
                 <input id="first_name" type="checkbox" value="first_name">First Name<br>
                 <input id="last_name" type="checkbox" value="last_name">Last name<br>
@@ -84,7 +92,6 @@
                 <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
                 <input id="gender" type="checkbox" value="gender">Gender<br>
                 <input id="avatar" type="checkbox" value="avatar">Avatar<br>
-                <br />
                 <p>Hide some optional fields (ones you flagged as required will be ignored):</p>
                 <input id="first_name_hide" type="checkbox" value="first_name_hide">First Name<br>
                 <input id="last_name_hide" type="checkbox" value="last_name_hide">Last name<br>
@@ -93,9 +100,7 @@
                 <input id="birth_date_hide" type="checkbox" value="birth_date_hide">Birth date<br>
                 <input id="gender_hide" type="checkbox" value="gender_hide">Gender<br>
                 <input id="avatar_hide" type="checkbox" value="avatar_hide">Avatar<br>
-                <br />
             </div>
-            <br />
             <div class="submit">
                 <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register with custom parameters</a>
             <div>
