@@ -60,15 +60,15 @@
                 {% endif %}
                 {% if group.name == "Editor"%}
                     <p>We don't know what to do with you yet, go do something fun:</p>
-                    <a class="button" href="http://www.youtube.com">YouTube</a>
+                    <a class="button" href="http://www.youtube.com">This is a Editor only YouTube button!</a>
                 {% endif %}
                 {% if group.name == "Manager"%}
                     <p>You, go you! Manage those people!:</p>
-                    <a class="button" href="{{ settings.OIDC_OP }}/admin/">Auth admin</a>
+                    <a class="button" href="{{ settings.OIDC_OP }}/admin/">This is a Manager only button!</a>
                 {% endif %}
                 {% if group.name == "Trainee"%}
                     <p>Good luck out there! Remember Google is your friend:</p>
-                    <a class="button" href="http://www.google.com">Google</a>
+                    <a class="button" href="http://www.google.com">This is a Trainee only Google button!</a>
                 {% endif %}
                 {% if group.name == "NoRoles"%}
                     <h3>Whoops, seems you have no roles assigned to you.</h3>
