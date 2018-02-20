@@ -12,9 +12,18 @@
     h2 {
         color: black;
     }
-    body {
-        background: linear-gradient(grey, {{ settings.WAGTAIL_SITE_COLOUR }});
+    h3 {
+        color: darkred;
     }
+    {% if settings.WAGTAIL_SITE_COLOUR == "green" %}
+        body {
+            background: linear-gradient(grey, #006f24);
+        }
+    {% elif settings.WAGTAIL_SITE_COLOUR == "blue" %}
+        body {
+            background: linear-gradient(grey, #61c7b4);
+        }
+    {% endif %}
     .wrapper {
         padding: 0;
         margin-left: 10%;
@@ -29,6 +38,9 @@
         margin-top: 5px;
         margin-bottom: 5px;
     }
+    .border-box {
+        border-bottom: 2px solid crimson;
+    }
     </style>
 {% endblock %}
 
@@ -37,12 +49,32 @@
         {% if user.is_authenticated %}
             <h1>Welcome <i>{{ user.first_name }}</i> to the {{ settings.WAGTAIL_SITE_NAME }} home page</h1>
             <h1>E-mail: {{ user.email }}</h1>
-            <h1>Roles</h1>
-            <ul>
             {% for group in user.groups.all %}
-                <li>{{ group.name }}</li>
+                <div class="border-box">
+                {% if group.name != "NoRoles"%}
+                    <h3>You have the {{ group.name }} role assigned.</h3>
+                {% endif %}
+                {% if group.name == "Admin" %}
+                    <p>You're an admin, go do adminy things:</p>
+                    <a class="button" href="{{ settings.OIDC_OP }}/admin/">Auth admin</a>
+                {% endif %}
+                {% if group.name == "Editor"%}
+                    <p>We don't know what to do with you yet, go do something fun:</p>
+                    <a class="button" href="http://www.youtube.com">YouTube</a>
+                {% endif %}
+                {% if group.name == "Manager"%}
+                    <p>You, go you! Manage those people!:</p>
+                    <a class="button" href="{{ settings.OIDC_OP }}/admin/">Auth admin</a>
+                {% endif %}
+                {% if group.name == "Trainee"%}
+                    <p>Good luck out there! Remember Google is your friend:</p>
+                    <a class="button" href="http://www.google.com">Google</a>
+                {% endif %}
+                {% if group.name == "NoRoles"%}
+                    <h3>Whoops, seems you have no roles assigned to you.</h3>
+                {% endif %}
+                </div>
             {% endfor %}
-            </ul>
             <div class="submit">
                 <a class="button" href="{% url "logout" %}">Logout</a>
             <div>
@@ -63,10 +95,10 @@
                 fields, more stringent password requirements).
             </p>
             <div class="submit">
-                <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme=django&hide=end-user&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as an "End User"</a>
+                <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.WAGTAIL_SITE_COLOUR }}&hide=end-user&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as an "End User"</a>
             <div>
             <div class="submit">
-                <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme=django&requires=first_name&requires=last_name&requires=gender&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as a "System User"</a>
+                <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.WAGTAIL_SITE_COLOUR }}&requires=first_name&requires=last_name&requires=gender&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as a "System User"</a>
             <div>
 
             {% comment %}
