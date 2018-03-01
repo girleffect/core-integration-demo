@@ -2,22 +2,32 @@ sudo: required
 cache: pip
 language: python
 python:
-  - "3.6"
-services:
-  - docker
-  - postgresql
-
+- '3.6'
 env:
+  matrix:
   - TOXENV=django111
-
+  global:
+  - secure: C9bulHknNEKkXObs8GU72D0p6jB4M4N5wYXasJB77XgGKnQtzDZQz4A4zHryaMp1PAdnkMKk5IGvUHNKyOhySeZJM+AqWcK8vBWCyKN2thXIQttQoguPA7Z28c9bj5yKmapZyJapN3ul/Sw2hAdNfC3AjRbFZB7Dk1OgcgamCt7yoAk1ZVs3L3r0tdvqm/NpMBHUcYJIH5NOBO9sLDREv0hN+nvWD+0nNUqBIBk9nwyx+aofGMyBoIAfBs4l8/NEK2poPSG0Qol8CWfociKRo43OlU4c9nb91ulrqqNw9BRwcyb4JOX0knykQlqAn5AItzmVpayU2PVMdooq+91mbE6ajkcWItEojorQAsPiSLUOGlqFoXqQxS2bP9wjhYaxWkhUkBAdFckYTZLwOqX7Pduh4zZbPUF1OT6Nnx5ZAAqSZz9rFCAw2jc+bUcOCGZLLEHkg7kDPzRfJwrxUuiuqPCUPWqUUxr2eV1+wLhXPuKr7kAUxhtzoAaldTrfgRb2/Dob2XhzkyuPY/U6rGFV7lWydsvho7nzi158NTD4hiBjNIyIHHnKC+BIJABdx2tguMCSWI9BpMfGkO44KTcojl7i0nLe4Uwz9Uhi1cdHSGcFfv7o0o1vKfE+EH/4sNXxYkNULkxrB82XskAkafqp7svGdmbIuZn0mkVfb4Hes88=
+  - secure: EeJZBdI8l3qM9Eq4wLci9pnuPACnTVPwUnWlMq6rzIHMclGI754I/OM+mYSofJkrWlaLjVkABvvUmEGgapdhKqaClmq9kdhToPtdigJjVV45YOILIxpKswG39Qt3catHUk8ylxJSeOZq+y7V7WM+nOxeIDsAtXzpkh7VrZzQbuuAvLCXoJz6me3k4k/WQ/oqVff9JUpQNaRpJziqBZHWop0o5UiDpCZlpSYrRatPN38EOQIN+s7iqmkwjWGAK5VEVEggTKa0XBDzXGMlWUFMwOr3aOb6lRycdEBVYTKLD+bVF3n0AX8nH3MuYgfPSbWnkZpSikF1HyR2y9kaxu5O5QF3pz6aHcUOSeJkXB70WhuylH4FeK83cRZ1aZWqifuX89NGsfaJmwm8u6qBctggWZv1MgS7GD5Ed50JffTTVOhXK2aXsAuaOH2SOgaHBT7JIQfXHmf4sbaD4xtOjBaCAMQFCsr+bZA35SniHv44K34E3MXPlpFqyTorBiUFlS5Gfr4Uv+fweR+to7rR4HNpbgqveiFsHd/7b4ZLxgvHcAoy9kvCauvrCDtOl9w40M9Gs5GXEdJA5Ho8qNAYi1vCb9H1n/LQWc9AhfYirq4IXWQbt5+HJdZVU9EFBJTSzQLIJWivbTu18qClG2kpfqeXWjyQ2Iyzmx1jdx6rlvoAjNw=
+services:
+- docker
+- postgresql
 install:
-  - pip install tox coveralls
-
+- pip install tox coveralls
 script: tox
-
 after_success:
-  - coveralls
-  - export REPO=dockerhubowner/integration-demo
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH_CLEAN ; fi`
-  - export build -t $REPO:$TAG .
-
+- coveralls
+deploy:
+- provider: script
+  script: bash ./scripts/docker_push.sh
+  on:
+    branch: master
+- provider: script
+  script: bash ./scripts/docker_push.sh
+  on:
+    branch: develop
+- provider: script
+  script: bash ./scripts/docker_push.sh
+  on:
+    all_branches: true
+    condition: "${TRAVIS_BRANCH} =~ ^release.*$"
