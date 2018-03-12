@@ -33,7 +33,7 @@ html, body {
     background: url('http://za.heyspringster.com/static/img/sp-logo.3e443cd8bfae.png') #7300ff no-repeat; 
     background-size: 115px;
     background-position: center center;
-    margin: 0 auto;
+    margin: 0 auto 40px auto;
 }
 .content {
     margin: 20px auto;
@@ -46,8 +46,11 @@ html, body {
 }
 .content > h2 {
     margin: 0 0 20px 0;
+    padding-bottom: 20px;
     text-align: center;
     color: #000;
+    background: url('http://za.heyspringster.com/static/img/lines/zig-zag-underline.png') bottom no-repeat;
+    background-size: 145px;
 }
 .content h3 {
     margin-top: 0;
