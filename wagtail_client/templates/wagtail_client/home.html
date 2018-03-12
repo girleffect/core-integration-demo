@@ -67,12 +67,10 @@
                     for "end users" (2FA not required, less required fields) and "system users" (2FA required, more required
                     fields, more stringent password requirements).
                 </p>
-
                 <div class="buttons">
-                    <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.WAGTAIL_SITE_COLOUR }}&hide=end-user&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as an "End User"</a>
-                    <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.WAGTAIL_SITE_COLOUR }}&requires=first_name&requires=last_name&requires=gender&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as a "System User"</a>
+                    <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as an "End User"</a>
+                    <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register as a "System User"</a>
                 </div>
-
                 {% comment %}
                     TODO once sure how we want to demo it, a management command should suffice, wagtail can build pages.
                 {% endcomment %}
