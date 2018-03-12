@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', "Wagtail Demo")
-WAGTAIL_SITE_COLOUR = os.environ.get('WAGTAIL_SITE_COLOUR', "black")
+SITE_CODE = os.environ.get('SITE_CODE', "none")
 WAGTAIL_REDIRECT_URL = os.environ.get('WAGTAIL_REDIRECT_URL')
 
 OIDC_RP_CLIENT_ID = "client_id_1"
