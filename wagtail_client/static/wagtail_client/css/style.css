@@ -1,0 +1,117 @@
+@font-face {
+    font-family: Baton;
+    src: url('/static/wagtail_client/fonts/Baton-Regular-Web.woff');
+}
+
+@font-face {
+    font-family: BatonMedium;
+    src: url('/static/wagtail_client/fonts/Baton-Medium-Web.woff');
+}
+
+* {
+    font-family: Baton, Arial, Helvetica, sans-serif!important;
+    box-sizing: border-box;
+}
+
+html, body {
+    background: #fff;
+    color: #656d78;
+    font-size: 1em;
+}
+
+.wrapper {
+    padding: 0;
+}
+.content-wrapper {
+    background: #fff;
+    border: 0;
+}
+.content-wrapper > h1 {
+    height: 50px;
+    font-size: 0;
+    text-indent: -9999px;
+    background: url('http://za.heyspringster.com/static/img/sp-logo.3e443cd8bfae.png') #7300ff no-repeat; 
+    background-size: 115px;
+    background-position: center center;
+    margin: 0 auto;
+}
+.content {
+    margin: 20px auto;
+    max-width: 500px;
+}
+.content .field-group {
+    padding: 20px;
+    border: 1px solid #e1e1e1;
+    margin-bottom: 20px;
+}
+.content > h2 {
+    margin: 0 0 20px 0;
+    text-align: center;
+    color: #000;
+}
+.content h3 {
+    margin-top: 0;
+    color: #000;
+}
+.content > p {
+    margin: 20px 0;
+    text-align: center;
+}
+.content select {
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #e6e6e6;
+}
+.content select:focus {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+}
+.content .buttons {
+    margin-bottom: 20px;
+}
+.content .buttons .button {
+    width: 48%;
+    margin-top: 0;
+}
+.content .buttons .button:first-child {
+    float: left;
+}
+.content .buttons .button:last-child {
+    float: right;
+}
+.content .buttons::after {
+    content: "";
+    clear: both;
+    display: block;
+}
+.button {
+    margin: 20px 0;
+    background: #7300ff;
+    border: 0;
+    display: block;
+    text-align: center;
+}
+.button:hover {
+    background: #7300ff;
+    border: 0;
+}
+.submit {
+    margin: 20px 0;
+}
+.submit .button,
+.submit .submit {
+    margin-left: 0;
+    margin-right: 0;
+}
+.submit .submit {
+}
+.submit .submit h2 {
+    text-align: center;
+    color: #000;
+}
+.submit .submit div {
+    margin-top: 40px;
+}
+.submit .submit div div {
+    margin-top: 0;
+}
