@@ -12,7 +12,9 @@
 {% block extra_css %}
     {{ block.super }}
     {% if settings.SITE_CODE == "springster" %}
-        <link rel="stylesheet" href="{% static "wagtail_client/css/style.css" %}">
+        <link rel="stylesheet" href="{% static "wagtail_client/css/springster.css" %}">
+    {% elif settings.SITE_CODE == "ninyampinga" %}
+        <link rel="stylesheet" href="{% static "wagtail_client/css/ninyampinga.css" %}">
     {% endif %}
 {% endblock %}
 
