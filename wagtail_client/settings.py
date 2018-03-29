@@ -21,6 +21,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', "Wagtail Demo")
 SITE_CODE = os.environ.get('SITE_CODE', "none")
+
+# Add extra parameters to the auth request. We can set a site-specific theme here.
+OIDC_AUTH_REQUEST_EXTRA_PARAMS = {"theme": SITE_CODE}
 WAGTAIL_REDIRECT_URL = os.environ.get('WAGTAIL_REDIRECT_URL')
 
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
@@ -41,8 +44,6 @@ OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
 
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15 * 60  # 15 minutes
 
-# Add extra parameters to the auth request. We can set a site-specific theme here.
-OIDC_AUTH_REQUEST_EXTRA_PARAMS = {"theme": "django"}
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
