@@ -44,6 +44,11 @@
                 </p>
                 <a class="button" href="{% url 'oidc_authentication_init' %}">Login</a>
                 <p>
+                    You can also navigate to a protected page (one that requires you to be logged in) and it will
+                    automatically redirect you to the login page on the Identity Provider.
+                </p>
+                <a class="button" href="{% url 'protected' %}">Go to a protected page</a>
+                <p>
                     Registration functionality can be tailored per site. Below we have 2 typical registration buttons, one
                     for "end users" (2FA not required, less required fields) and "system users" (2FA required, more required
                     fields, more stringent password requirements).

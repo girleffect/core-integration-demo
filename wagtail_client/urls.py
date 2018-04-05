@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^pages/', include(wagtail_urls)),
     url(r'^oidc/', include('mozilla_django_oidc.urls')),
-    url(r'^protected/', ProtectedPageView.as_view(), name="login"),
+    url(r'^protected/', ProtectedPageView.as_view(), name="protected"),
     url(r'^login/', HomePageView.as_view(), name="login"),
     url(r"^$", HomePageView.as_view(), name="home"),
     url(r"^logout/", logout, name="logout"),
