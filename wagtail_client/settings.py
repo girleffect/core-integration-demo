@@ -111,7 +111,6 @@ ROOT_URLCONF = 'wagtail_client.urls'
 
 AUTHENTICATION_BACKENDS = (
     'girleffect_oidc_integration.auth.GirlEffectOIDCBackend',
-    #'django.contrib.auth.backends.ModelBackend',
 )
 
 TEMPLATES = [
