@@ -1,0 +1,26 @@
+{% extends "wagtailadmin/admin_base.html" %}
+
+{% load static %}
+
+{% block titletag %}
+    Protected page
+{% endblock %}
+{% block extra_css %}
+    {{ block.super }}
+    {% if settings.SITE_CODE == "springster" %}
+        <link rel="stylesheet" href="{% static "wagtail_client/css/springster.css" %}">
+    {% elif settings.SITE_CODE == "ninyampinga" %}
+        <link rel="stylesheet" href="{% static "wagtail_client/css/ninyampinga.css" %}">
+    {% endif %}
+{% endblock %}
+
+{% block furniture %}
+    <div class="content-wrapper">
+        <div class="content">
+            <h1>Welcome <i>{{ user.first_name }}</i> to the protected page</h1>
+            <div class="submit">
+                <a class="button" href="{% url "logout" %}">Logout</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -44,7 +44,7 @@ OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
 
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15 * 60  # 15 minutes
 
-
+LOGIN_URL = reverse_lazy("oidc_authentication_init")
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -110,7 +110,6 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'wagtail_client.urls'
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
     'girleffect_oidc_integration.auth.GirlEffectOIDCBackend',
 )
 
