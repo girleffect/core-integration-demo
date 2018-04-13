@@ -68,46 +68,49 @@
                 {% comment %}
                     TODO once sure how we want to demo it, a management command should suffice, wagtail can build pages.
                 {% endcomment %}
-                <h2>Advanced demo: customise the registration experience</h2>
-                <div>
-                    <div class="field-group">
-                        <h3>Toggle some options:</h3>
-                        <input id="security" type="checkbox" value="security" checked>High security<br>
-                        <input id="show2fa" type="checkbox" value="show2fa">Show two factor auth<br>
-                        <input id="redirect" type="checkbox" value="redirect" checked>Redirect back here?<br>
+                {% comment %}
+                    THE ADVANCED DEMO IS HIDDEN AS PER GE-1005. CAN EASILY BE RECOVERED BY UNCOMMENTING
+                    <h2>Advanced demo: customise the registration experience</h2>
+                    <div>
+                        <div class="field-group">
+                            <h3>Toggle some options:</h3>
+                            <input id="security" type="checkbox" value="security" checked>High security<br>
+                            <input id="show2fa" type="checkbox" value="show2fa">Show two factor auth<br>
+                            <input id="redirect" type="checkbox" value="redirect" checked>Redirect back here?<br>
+                        </div>
+                        <div class="field-group">
+                            <h3>Pick a theme:</h3>
+                            <select id="theme">
+                                <option value="springster">Springster</option>
+                                <option value="ninyampinga">Ninyampinga</option>
+                                <option value="none">No theme</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <h3>Make some optional fields required:</h3>
+                            <input id="first_name" type="checkbox" value="first_name">First Name<br>
+                            <input id="last_name" type="checkbox" value="last_name">Last name<br>
+                            <input id="nickname" type="checkbox" value="nickname">Nickname<br>
+                            <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
+                            <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
+                            <input id="gender" type="checkbox" value="gender">Gender<br>
+                            <input id="avatar" type="checkbox" value="avatar">Avatar<br>
+                        </div>
+                        <div class="field-group">
+                            <h3>Hide some optional fields (ones you flagged as required will be ignored):</h3>
+                            <input id="first_name_hide" type="checkbox" value="first_name_hide">First Name<br>
+                            <input id="last_name_hide" type="checkbox" value="last_name_hide">Last name<br>
+                            <input id="nickname_hide" type="checkbox" value="nickname_hide">Nickname<br>
+                            <input id="msisdn_hide" type="checkbox" value="msisdn_hide">MSISDN<br>
+                            <input id="birth_date_hide" type="checkbox" value="birth_date_hide">Birth date<br>
+                            <input id="gender_hide" type="checkbox" value="gender_hide">Gender<br>
+                            <input id="avatar_hide" type="checkbox" value="avatar_hide">Avatar<br>
+                        </div>
                     </div>
-                    <div class="field-group">
-                        <h3>Pick a theme:</h3>
-                        <select id="theme">
-                            <option value="springster">Springster</option>
-                            <option value="ninyampinga">Ninyampinga</option>
-                            <option value="none">No theme</option>
-                        </select>
+                    <div class="submit">
+                        <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register with custom parameters</a>
                     </div>
-                    <div class="field-group">
-                        <h3>Make some optional fields required:</h3>
-                        <input id="first_name" type="checkbox" value="first_name">First Name<br>
-                        <input id="last_name" type="checkbox" value="last_name">Last name<br>
-                        <input id="nickname" type="checkbox" value="nickname">Nickname<br>
-                        <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
-                        <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
-                        <input id="gender" type="checkbox" value="gender">Gender<br>
-                        <input id="avatar" type="checkbox" value="avatar">Avatar<br>
-                    </div>
-                    <div class="field-group">
-                        <h3>Hide some optional fields (ones you flagged as required will be ignored):</h3>
-                        <input id="first_name_hide" type="checkbox" value="first_name_hide">First Name<br>
-                        <input id="last_name_hide" type="checkbox" value="last_name_hide">Last name<br>
-                        <input id="nickname_hide" type="checkbox" value="nickname_hide">Nickname<br>
-                        <input id="msisdn_hide" type="checkbox" value="msisdn_hide">MSISDN<br>
-                        <input id="birth_date_hide" type="checkbox" value="birth_date_hide">Birth date<br>
-                        <input id="gender_hide" type="checkbox" value="gender_hide">Gender<br>
-                        <input id="avatar_hide" type="checkbox" value="avatar_hide">Avatar<br>
-                    </div>
-                </div>
-                <div class="submit">
-                    <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Register with custom parameters</a>
-                </div>
+                {% endcomment %}
             </div>
         {% endif %}
     </div>
