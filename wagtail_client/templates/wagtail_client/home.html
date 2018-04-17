@@ -29,10 +29,11 @@
                 {% if user.groups.all %}
                     <h2>User has the following roles for this site:</h2>
                     {% for group in user.groups.all %}
+                        <p>{{ group.name }}</p>
+                    {% endfor %}
+                    {% for group in user.groups.all %}
                         {% if group.name == "data_viewer"%}
-                            <p>This piece of content is only visible to users with the Data Viewer role on this application</p>
-                        {% else %}
-                            <p>{{ group.name }}</p>
+                            <p style="font-style:italic;font-size:20px;">This piece of content is only visible to users with the Data Viewer role on this application</p>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
