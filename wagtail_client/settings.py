@@ -42,6 +42,13 @@ OIDC_OP_TOKEN_ENDPOINT = os.environ['OIDC_OP_TOKEN_ENDPOINT']
 # <URL of the OIDC OP userinfo endpoint>
 OIDC_OP_USER_ENDPOINT = os.environ['OIDC_OP_USER_ENDPOINT']
 
+# A method that will construct a logout URL for the Authentication Service.
+# This is only required if the user needs to be logged out of the Authentication Service as well
+# as this application.
+OIDC_OP_LOGOUT_URL_METHOD = "wagtail_client.utils.provider_logout_url"
+
+OIDC_OP_LOGOUT_URL = os.environ['OIDC_OP_LOGOUT_URL']
+
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15 * 60  # 15 minutes
 
 LOGIN_URL = reverse_lazy("oidc_authentication_init")
