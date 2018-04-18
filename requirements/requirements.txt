@@ -1,5 +1,9 @@
+# We require functionality that was introduced to the mozilla-django-oidc library after the
+# 0.6.0 release. We need to pull it from master until they make a new release. cobusc - 2018/04/18
+# mozilla-django-oidc>=0.6.0,<1.0
+# TODO: Use newer package when released
+-e git+https://github.com/mozilla/mozilla-django-oidc@68a6d67#egg=mozilla_django_oidc
 Django>=1.11,<2.0
 wagtail>=1.13,<2.0
-mozilla-django-oidc>=0.6.0,<1.0
 psycopg2>=2.7.3.2
 
