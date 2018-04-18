@@ -1,7 +1,9 @@
 {% extends "wagtailadmin/admin_base.html" %}
 
 {% load static %}
-
+{% block sitename %}
+    {{ settings.WAGTAIL_SITE_NAME }}
+{% endblock %}
 {% block titletag %}
     {% if user.is_authenticated %}
         Home page
