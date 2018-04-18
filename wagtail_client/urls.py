@@ -24,6 +24,7 @@ from wagtail.wagtailcore import urls as wagtail_urls
 
 from wagtail_client.views import HomePageView, ProtectedPageView
 
+
 urlpatterns = [
     url(r'^admin/login/', RedirectView.as_view(pattern_name="oidc_authentication_init")),
     url(r'^admin/', admin.site.urls),
@@ -34,5 +35,5 @@ urlpatterns = [
     url(r'^protected/', ProtectedPageView.as_view(), name="protected"),
     url(r'^login/', HomePageView.as_view(), name="login"),
     url(r"^$", HomePageView.as_view(), name="home"),
-    url(r"^logout/", logout, name="logout"),
+    # url(r"^logout/", logout, name="logout"),
 ]
