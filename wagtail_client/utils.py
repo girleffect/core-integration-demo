@@ -10,9 +10,6 @@ def provider_logout_url(request):
     :param request:
     :return:
     """
-    # TODO: The current implementation will only work as long as you are logging out of the last
-    # site you logged in to. If you logged into another site after the one you are logging out from
-    # now, you will be redirected there.
     parameters = {
         "post_logout_redirect_uri": settings.WAGTAIL_REDIRECT_URL
     }
