@@ -39,12 +39,12 @@
                         {% endif %}
                     {% endfor %}
                 {% endif %}
-                <div class="submit">
                     <form action="{% url "oidc_logout" %}" method="post">
                         {% csrf_token %}
-                        <input class="button" type="submit" value="Logout" />
+                        <div class="submit">
+                            <input class="button" type="submit" value="Logout" />
+                        </div>
                     </form>
-                </div>
                 <div class="submit">
                     <a class="button" href="{{ settings.OIDC_OP }}/profile/edit/?theme={{ settings.SITE_CODE }}&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Edit Profile</a>
                 </div>
