@@ -72,6 +72,9 @@ html, body {
 .content .buttons {
     margin-bottom: 20px;
 }
+.content input.button {
+    width: 100%;
+}
 .content .buttons .button {
     width: 48%;
     margin-top: 0;
