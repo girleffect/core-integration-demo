@@ -26,6 +26,8 @@ SITE_CODE = os.environ.get('SITE_CODE', "none")
 OIDC_AUTH_REQUEST_EXTRA_PARAMS = {"theme": SITE_CODE}
 WAGTAIL_REDIRECT_URL = os.environ.get('WAGTAIL_REDIRECT_URL')
 
+OIDC_STORE_ID_TOKEN = True  # Used by wagtail_client.utils.provider_logout_url()
+
 OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
 OIDC_OP = os.environ['OIDC_OP']
