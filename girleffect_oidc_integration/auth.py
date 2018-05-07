@@ -36,6 +36,15 @@ def _update_user_from_claims(user, claims):
     roles = set(claims.get("roles", []))
     groups = set(group.name for group in user.groups.all())
 
+    if roles:
+        user.is_staff = True
+        if "tech_admin" in roles:
+            user.is_superuser = True
+    else:
+        user.is_staff = False
+        user.is_superuser = False
+    user.save()
+
     groups_to_add = roles - groups
     groups_to_remove = groups - roles
 
