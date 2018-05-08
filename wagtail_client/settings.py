@@ -33,7 +33,10 @@ OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
 OIDC_OP = os.environ['OIDC_OP']
 
 # The scopes that this application will request access to.
-OIDC_RP_SCOPES = 'openid profile email address phone site roles'
+if SITE_CODE == "springster":
+    OIDC_RP_SCOPES = 'openid profile site roles'
+else:
+    OIDC_RP_SCOPES = 'openid profile email address phone site roles'
 
 # <URL of the OIDC OP authorization endpoint>
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.environ['OIDC_OP_AUTHORIZATION_ENDPOINT']
