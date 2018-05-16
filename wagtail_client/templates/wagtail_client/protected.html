@@ -18,9 +18,12 @@
     <div class="content-wrapper">
         <div class="content">
             <h1>Welcome <i>{{ user.first_name }}</i> to the protected page</h1>
-            <div class="submit">
-                <a class="button" href="{% url "oidc_logout" %}">Logout</a>
-            </div>
+            <form action="{% url "oidc_logout" %}" method="post">
+                {% csrf_token %}
+                <div class="submit">
+                    <input class="button" type="submit" value="Logout" />
+                </div>
+            </form>
         </div>
     </div>
 {% endblock %}
