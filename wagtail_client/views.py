@@ -8,6 +8,7 @@ from django.views.generic import (
     TemplateView,
     RedirectView
 )
+from mozilla_django_oidc.views import OIDCAuthenticationRequestView
 
 
 class HomePageView(TemplateView):
@@ -63,3 +64,11 @@ class RedirectRegister(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         # Reverses or reverse_lazy in urls.py caused circular imports. Seemingly.
         return reverse("oidc_authentication_init") + f"?next={reverse('home')}"
+
+
+class CustomAuthenticationRequestView(OIDCAuthenticationRequestView):
+
+    def get_extra_params(self, request):
+        params = super().get_extra_params(request)
+        params.update({"insert": "custom", "parameters": "here"})
+        return params
