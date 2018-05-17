@@ -20,7 +20,12 @@ from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailcore import urls as wagtail_urls
 
-from wagtail_client.views import HomePageView, ProtectedPageView, RedirectWithQueryStringView
+from wagtail_client.views import (
+    HomePageView,
+    ProtectedPageView,
+    RedirectWithQueryStringView,
+    RedirectRegister
+)
 
 
 urlpatterns = [
@@ -36,5 +41,10 @@ urlpatterns = [
     url(r'^protected/', ProtectedPageView.as_view(), name="protected"),
     url(r'^login/', HomePageView.as_view(), name="login"),
     url(r"^$", HomePageView.as_view(), name="home"),
+    url(
+        r"^register-redirect/$",
+        RedirectRegister.as_view(),
+        name="register_redirect"
+    )
     # url(r"^logout/", logout, name="logout"),
 ]
