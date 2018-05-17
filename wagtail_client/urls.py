@@ -20,21 +20,20 @@ from wagtail.wagtailadmin import urls as wagtailadmin_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from wagtail.wagtailcore import urls as wagtail_urls
 
-from wagtail_client.views import HomePageView, ProtectedPageView, RedirectWithQueryStringView
+from wagtail_client.views import HomePageView, ProtectedPageView, LoginRedirectWithQueryStringView
 
 
 urlpatterns = [
     # Override default Django admin login
-    url(r'^admin/login/', RedirectWithQueryStringView.as_view(pattern_name="oidc_authentication_init")),
+    url(r'^admin/login/', LoginRedirectWithQueryStringView.as_view()),
     url(r'^admin/', admin.site.urls),
     # Override default Wagtail admin login
-    url(r'^cms/login/', RedirectWithQueryStringView.as_view(pattern_name="oidc_authentication_init")),
+    url(r'^cms/login/', LoginRedirectWithQueryStringView.as_view()),
     url(r'^cms/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^pages/', include(wagtail_urls)),
     url(r'^oidc/', include('mozilla_django_oidc.urls')),
     url(r'^protected/', ProtectedPageView.as_view(), name="protected"),
-    url(r'^login/', HomePageView.as_view(), name="login"),
+    url(r'^login/', LoginRedirectWithQueryStringView.as_view(), name="login"),
     url(r"^$", HomePageView.as_view(), name="home"),
-    # url(r"^logout/", logout, name="logout"),
 ]

@@ -21,6 +21,13 @@
 {% endblock %}
 
 {% block furniture %}
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     <div class="content-wrapper">
         {% if user.is_authenticated %}
             <h1>Welcome <i>{{ user.first_name }}</i> to the {{ settings.WAGTAIL_SITE_NAME }} home page</h1>

@@ -56,7 +56,7 @@ OIDC_OP_LOGOUT_URL = os.environ['OIDC_OP_LOGOUT_URL']
 
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15 * 60  # 15 minutes
 
-LOGIN_URL = reverse_lazy("oidc_authentication_init")
+LOGIN_URL = reverse_lazy("login")
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
