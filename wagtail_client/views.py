@@ -32,7 +32,7 @@ class ProtectedPageView(TemplateView):
 
 
 class RedirectRegister(RedirectView):
-    query_string = True
 
     def get_redirect_url(self, *args, **kwargs):
+        # Reverses or reverse_lazy in urls.py caused circular imports. Seemingly.
         return reverse("oidc_authentication_init") + f"?next={reverse('home')}"

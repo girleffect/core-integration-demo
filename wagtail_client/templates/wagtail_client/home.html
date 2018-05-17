@@ -77,8 +77,29 @@
                     fields, more stringent password requirements).
                 </p>
                 <div class="buttons">
-                    <a id="endUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/">Register as an "End User"</a>
-                    <a id="systemUserRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/">Register as a "System User"</a>
+                    {% if settings.SITE_CODE == "ninyampinga" %}
+                        <a
+                            id="endUserRedirectButton"
+                            class="button"
+                            href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/"
+                        >Register as an "End User"</a>
+                        <a
+                            id="systemUserRedirectButton"
+                            class="button"
+                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/"
+                        >Register as a "System User"</a>
+                    {% else %}
+                        <a
+                            id="endUserRedirectButton"
+                            class="button"
+                            href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user"
+                        >Register as an "End User"</a>
+                        <a
+                            id="systemUserRedirectButton"
+                            class="button"
+                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender"
+                        >Register as a "System User"</a>
+                    {% endif %}
                 </div>
                 {% comment %}
                     TODO once sure how we want to demo it, a management command should suffice, wagtail can build pages.
