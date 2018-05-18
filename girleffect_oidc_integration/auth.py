@@ -5,7 +5,9 @@ https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html#additiona
 """
 import logging
 
+from django.contrib import messages
 from django.contrib.auth.models import Group
+
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 USERNAME_FIELD = "username"
@@ -75,6 +77,7 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         :return: A user identified by the claims, else None
         """
         uuid = claims["sub"]
+        messages.success(self.request, claims.get("migration_information"))
         try:
             kwargs = {USERNAME_FIELD: uuid}
             user = self.UserModel.objects.get(**kwargs)
