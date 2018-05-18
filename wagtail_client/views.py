@@ -11,6 +11,8 @@ from django.views.generic import (
 )
 from mozilla_django_oidc.views import OIDCAuthenticationRequestView, OIDCAuthenticationCallbackView
 
+from wagtail_client.mock_multisite_config import get_config_for_site
+
 
 class HomePageView(TemplateView):
     """
@@ -88,8 +90,9 @@ class CustomAuthenticationRequestView(OIDCAuthenticationRequestView):
         :param request:
         :return:
         """
-        site_id = get_current_site(request)
-        self.OIDC_RP_CLIENT_ID = settings.OIDC_RP_CLIENT_ID
+        site = get_current_site(request)
+        config = get_config_for_site(site)
+        self.OIDC_RP_CLIENT_ID = config["OIDC_RP_CLIENT_ID"]
         return super().get(request)
 
     def get_extra_params(self, request):

@@ -5,10 +5,11 @@ https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html#additiona
 """
 import logging
 
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
+
+from wagtail_client.mock_multisite_config import get_config_for_site
 
 USERNAME_FIELD = "username"
 EMAIL_FIELD = "email"
@@ -126,13 +127,15 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
 
     def verify_token(self, token, **kwargs):
         site = get_current_site()
-        self.OIDC_RP_CLIENT_SECRET = settings.OIDC_RP_CLIENT_SECRET
+        config = get_config_for_site(site)
+        self.OIDC_RP_CLIENT_SECRET = config["OIDC_RP_CLIENT_SECRET"]
         return super().verify_token(token, **kwargs)
 
     def authenticate(self, **kwargs):
         if "request" in kwargs:
             site = get_current_site()
-            self.OIDC_RP_CLIENT_ID = settings.OIDC_RP_CLIENT_ID
-            self.OIDC_RP_CLIENT_SECRET = settings.OIDC_RP_CLIENT_SECRET
+            config = get_config_for_site(site)
+            self.OIDC_RP_CLIENT_ID = config["OIDC_RP_CLIENT_ID"]
+            self.OIDC_RP_CLIENT_SECRET = config["OIDC_RP_CLIENT_SECRET"]
 
         return super().authenticate(**kwargs)
