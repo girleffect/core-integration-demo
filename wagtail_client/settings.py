@@ -32,6 +32,7 @@ OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
 OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
 OIDC_OP = os.environ['OIDC_OP']
 OIDC_AUTHENTICATE_CLASS = "wagtail_client.views.CustomAuthenticationRequestView"
+OIDC_CALLBACK_CLASS = "wagtail_client.views.CustomAuthenticationCallbackView"
 
 # The scopes that this application will request access to.
 if SITE_CODE == "springster":
@@ -219,3 +220,8 @@ LOGGING = {
         },
     },
 }
+
+
+@property
+def TEST_ME():
+    return "Foo"

@@ -5,7 +5,9 @@ https://mozilla-django-oidc.readthedocs.io/en/stable/installation.html#additiona
 """
 import logging
 
+from django.conf import settings
 from django.contrib.auth.models import Group
+from django.contrib.sites.shortcuts import get_current_site
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
 USERNAME_FIELD = "username"
@@ -121,3 +123,16 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         # logging in.
         # verified = verified and claims.get("email_verified")
         return verified
+
+    def verify_token(self, token, **kwargs):
+        site = get_current_site()
+        self.OIDC_RP_CLIENT_SECRET = settings.OIDC_RP_CLIENT_SECRET
+        return super().verify_token(token, **kwargs)
+
+    def authenticate(self, **kwargs):
+        if "request" in kwargs:
+            site = get_current_site()
+            self.OIDC_RP_CLIENT_ID = settings.OIDC_RP_CLIENT_ID
+            self.OIDC_RP_CLIENT_SECRET = settings.OIDC_RP_CLIENT_SECRET
+
+        return super().authenticate(**kwargs)

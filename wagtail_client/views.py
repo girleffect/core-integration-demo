@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
@@ -8,7 +9,7 @@ from django.views.generic import (
     TemplateView,
     RedirectView
 )
-from mozilla_django_oidc.views import OIDCAuthenticationRequestView
+from mozilla_django_oidc.views import OIDCAuthenticationRequestView, OIDCAuthenticationCallbackView
 
 
 class HomePageView(TemplateView):
@@ -67,8 +68,71 @@ class RedirectRegister(RedirectView):
 
 
 class CustomAuthenticationRequestView(OIDCAuthenticationRequestView):
+    """
+    To support multi-site setups, we need to replace cases where the
+    Mozilla OIDC Client references any of the following:
+    * settings.OIDC_RP_CLIENT_ID
+    * settings.OIDC_RP_CLIENT_SECRET
+    * settings.OIDC_RP_SCOPES ??
+    * settings.LOGIN_REDIRECT_URL
+
+    These are typically referenced in the constructors of most classes,
+    but we have to make sure it is proper on the functions where we have
+    a request (since we can get the current site from the request).
+    """
+
+    def get(self, request):
+        """
+        In order to support proper login handling for multi-site configurations,
+        we need to set the applicable CLIENT_ID and CLIENT_SECRET.
+        :param request:
+        :return:
+        """
+        site_id = get_current_site(request)
+        self.OIDC_RP_CLIENT_ID = settings.OIDC_RP_CLIENT_ID
+        return super().get(request)
 
     def get_extra_params(self, request):
+        """
+        Extra parameters can be passed along in the login URL that is
+        generated. Set these parameters here.
+        """
         params = super().get_extra_params(request)
         params.update({"insert": "custom", "parameters": "here"})
         return params
+
+
+class CustomAuthenticationCallbackView(OIDCAuthenticationCallbackView):
+    """
+    To support multi-site setups, we need to replace cases where the
+    Mozilla OIDC Client references any of the following:
+    * settings.OIDC_RP_CLIENT_ID
+    * settings.OIDC_RP_CLIENT_SECRET
+    * settings.OIDC_RP_SCOPES ??
+    * settings.LOGIN_REDIRECT_URL
+
+    These are typically referenced in the constructors of most classes,
+    but we have to make sure it is proper on the functions where we have
+    a request (since we can get the current site from the request).
+    """
+    @property
+    def failure_url(self):
+        """
+        The URL to redirect to for a login failure can be customised here.
+        The request is available in self.request.
+        """
+        return super().failure_url()
+
+    @property
+    def success_url(self):
+        """
+        The URL to redirect to for a successful login can be customised here.
+        The request is available in self.request.
+        """
+        return super().login_success()
+
+
+
+
+
+
