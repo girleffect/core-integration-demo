@@ -19,12 +19,17 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', "Wagtail Demo")
+SITE_ID = 1  # For tests only
+
 SITE_CODE = os.environ.get('SITE_CODE', "none")
-WAGTAIL_REDIRECT_URL = os.environ.get('WAGTAIL_REDIRECT_URL')
+
+OIDC_STORE_ID_TOKEN = True  # Used by wagtail_client.utils.provider_logout_url()
 
 OIDC_RP_CLIENT_ID = "client_id_1"
 OIDC_RP_CLIENT_SECRET = "2a9db46eaca7b963b0f57dbd0c05182dab40f691e80d8cb4b75bd57d"
+OIDC_OP = "http://127.0.0.1:8000/"
+OIDC_AUTHENTICATE_CLASS = "wagtail_client.views.CustomAuthenticationRequestView"
+OIDC_CALLBACK_CLASS = "wagtail_client.views.CustomAuthenticationCallbackView"
 
 # The scopes that this application will request access to.
 OIDC_RP_SCOPES = 'openid profile email address phone site'
@@ -38,20 +43,21 @@ OIDC_OP_TOKEN_ENDPOINT = "http://127.0.0.1:8000/openid/token"
 # <URL of the OIDC OP userinfo endpoint>
 OIDC_OP_USER_ENDPOINT = "http://127.0.0.1:8000/openid/userinfo/"
 
+# A method that will construct a logout URL for the Authentication Service.
+# This is only required if the user needs to be logged out of the Authentication Service as well
+# as this application.
+OIDC_OP_LOGOUT_URL_METHOD = "wagtail_client.utils.provider_logout_url"
+
+OIDC_OP_LOGOUT_URL = "http://127.0.0.1:8000/openid/end-session/"
+
 OIDC_RENEW_ID_TOKEN_EXPIRY_SECONDS = 15 * 60  # 15 minutes
 
+LOGIN_URL = reverse_lazy("login")
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # These can 404 for now, just so we know what got triggered.
 LOGIN_REDIRECT_URL_FAILURE = reverse_lazy("login")  # "/failure/"
-
-# When an ID Token refresh attempt fails, it must redirect to a page
-# which will not trigger an automatic refresh again. This page should be
-# explicitly exempted from triggering the refresh.
-OIDC_EXEMPT_URLS = [
-    reverse_lazy("login"), "/failure/"
-]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -71,6 +77,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
 
     'mozilla_django_oidc',
 
@@ -106,13 +113,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
-    #'mozilla_django_oidc.middleware.RefreshIDToken',
+    # 'mozilla_django_oidc.middleware.SessionRefresh',
+    'wagtail_client.middleware.CustomSessionRefresh'
 ]
 
 ROOT_URLCONF = 'wagtail_client.urls'
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
     'girleffect_oidc_integration.auth.GirlEffectOIDCBackend',
 )
 
@@ -139,9 +146,11 @@ WSGI_APPLICATION = 'wagtail_client.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    "default": {
+        "ENGINE": os.environ.get("DB_ENGINE", "django.db.backends.postgresql"),
+        "NAME": os.environ.get("DB_NAME", "wagtail"),
+        "USER": os.environ.get("DB_USER", "postgres"),
+        "CONN_MAX_AGE": 600
     }
 }
 

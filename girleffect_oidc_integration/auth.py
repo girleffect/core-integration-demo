@@ -9,8 +9,6 @@ from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from mozilla_django_oidc.auth import OIDCAuthenticationBackend
 
-from wagtail_client.mock_multisite_config import get_config_for_site
-
 USERNAME_FIELD = "username"
 EMAIL_FIELD = "email"
 
@@ -126,16 +124,20 @@ class GirlEffectOIDCBackend(OIDCAuthenticationBackend):
         return verified
 
     def verify_token(self, token, **kwargs):
-        site = get_current_site()
-        config = get_config_for_site(site)
-        self.OIDC_RP_CLIENT_SECRET = config["OIDC_RP_CLIENT_SECRET"]
+        site = get_current_site(self.request)
+        if not hasattr(site, "oidcsettings"):
+            raise RuntimeError(f"Site {site} has no settings configured.")
+
+        self.OIDC_RP_CLIENT_SECRET = site.oidcsettings.oidc_rp_client_secret
         return super().verify_token(token, **kwargs)
 
     def authenticate(self, **kwargs):
         if "request" in kwargs:
-            site = get_current_site()
-            config = get_config_for_site(site)
-            self.OIDC_RP_CLIENT_ID = config["OIDC_RP_CLIENT_ID"]
-            self.OIDC_RP_CLIENT_SECRET = config["OIDC_RP_CLIENT_SECRET"]
+            site = get_current_site(kwargs["request"])
+            if not hasattr(site, "oidcsettings"):
+                raise RuntimeError(f"Site {site} has no settings configured.")
+
+            self.OIDC_RP_CLIENT_ID = site.oidcsettings.oidc_rp_client_id
+            self.OIDC_RP_CLIENT_SECRET = site.oidcsettings.oidc_rp_client_secret
 
         return super().authenticate(**kwargs)

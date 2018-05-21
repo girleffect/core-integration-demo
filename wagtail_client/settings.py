@@ -19,17 +19,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-WAGTAIL_SITE_NAME = os.environ.get('WAGTAIL_SITE_NAME', "Wagtail Demo")
 SITE_CODE = os.environ.get('SITE_CODE', "none")
-
-# Add extra parameters to the auth request. We can set a site-specific theme here.
-OIDC_AUTH_REQUEST_EXTRA_PARAMS = {"theme": SITE_CODE}
-WAGTAIL_REDIRECT_URL = os.environ.get('WAGTAIL_REDIRECT_URL')
 
 OIDC_STORE_ID_TOKEN = True  # Used by wagtail_client.utils.provider_logout_url()
 
-OIDC_RP_CLIENT_ID = os.environ['OIDC_RP_CLIENT_ID']
-OIDC_RP_CLIENT_SECRET = os.environ['OIDC_RP_CLIENT_SECRET']
+OIDC_RP_CLIENT_ID = "unused"  # Some constructors require that this be set.
+OIDC_RP_CLIENT_SECRET = "unused"  # some constructors require that this be set.
 OIDC_OP = os.environ['OIDC_OP']
 OIDC_AUTHENTICATE_CLASS = "wagtail_client.views.CustomAuthenticationRequestView"
 OIDC_CALLBACK_CLASS = "wagtail_client.views.CustomAuthenticationCallbackView"
@@ -83,6 +78,7 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
 
     'mozilla_django_oidc',
 
@@ -118,7 +114,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
-    'mozilla_django_oidc.middleware.SessionRefresh',
+    # 'mozilla_django_oidc.middleware.SessionRefresh',
+    'wagtail_client.middleware.CustomSessionRefresh'
 ]
 
 ROOT_URLCONF = 'wagtail_client.urls'

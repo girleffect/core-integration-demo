@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 
 
 def provider_logout_url(request):
@@ -10,8 +11,12 @@ def provider_logout_url(request):
     :param request:
     :return:
     """
+    site = get_current_site(request)
+    if not hasattr(site, "oidcsettings"):
+        raise RuntimeError(f"Site {site} has no settings configured.")
+
     parameters = {
-        "post_logout_redirect_uri": settings.WAGTAIL_REDIRECT_URL
+        "post_logout_redirect_uri": site.oidcsettings.wagtail_redirect_url
     }
     # The OIDC_STORE_ID_TOKEN setting must be set to true if we want to be able to read
     # it from the session.
