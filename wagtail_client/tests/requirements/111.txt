@@ -1,4 +1,5 @@
-django>=1.11,<2.0
+mozilla-django-oidc>=1.0.0,<2.0
+Django>=1.11,<2.0
 wagtail>=1.13,<2.0
-mozilla-django-oidc>=0.6.0,<1.0
 psycopg2>=2.7.3.2
+

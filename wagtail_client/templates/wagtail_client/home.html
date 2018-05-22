@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block sitename %}
-    {{ settings.WAGTAIL_SITE_NAME }}
+    {{ site.name }}
 {% endblock %}
 {% block titletag %}
     {% if user.is_authenticated %}
@@ -30,13 +30,13 @@
     {% endif %}
     <div class="content-wrapper">
         {% if user.is_authenticated %}
-            <h1>Welcome <i>{{ user.first_name }}</i> to the {{ settings.WAGTAIL_SITE_NAME }} home page</h1>
+            <h1>Welcome <i>{{ user.first_name }}</i> to the {{ site.name }} home page</h1>
             <div class="content">
                 {% if user.email %}
                     <h1>E-mail: {{ user.email }}</h1>
                 {% endif %}
                 {% if user.groups.all %}
-                    <h2>User has the following roles for this site:</h2>
+                    <h2>User has the following roles for {{ site.name }}:</h2>
                     {% for group in user.groups.all %}
                         <p>{{ group.name }}</p>
                     {% endfor %}
@@ -53,20 +53,20 @@
                         </div>
                     </form>
                 <div class="submit">
-                    <a class="button" href="{{ settings.OIDC_OP }}/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Edit Profile</a>
+                    <a class="button" href="{{ settings.OIDC_OP }}/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}">Edit Profile</a>
                 </div>
                 <h2>Try out different languages on the Authentication Service.</h2>
                 <p>The following links will take you to the edit profile page in the language indicated on the button.</p>
                 <div class="submit">
-                    <a class="button" href="{{ settings.OIDC_OP }}/af/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">Afrikaans</a>
+                    <a class="button" href="{{ settings.OIDC_OP }}/af/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}">Afrikaans</a>
                 </div>
                 <div class="submit">
-                    <a class="button" href="{{ settings.OIDC_OP }}/de/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}">German</a>
+                    <a class="button" href="{{ settings.OIDC_OP }}/de/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}">German</a>
                 </div>
             </div>
         {% else %}
-            <h1>Welcome to the {{ site_name }} home page</h1>
             <div class="content">
+                <h1>Welcome to the {{ site.name }} home page</h1>
                 <h2>Basic demo: Click and go</h2>
                 <p>
                     Login functionality is the same for any user. System users will see an extra step where they need to
@@ -88,12 +88,12 @@
                         <a
                             id="endUserRedirectButton"
                             class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/"
+                            href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.settings.wagtail_redirect_url|urlencode }}register-redirect/"
                         >Register as an "End User"</a>
                         <a
                             id="systemUserRedirectButton"
                             class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_url={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/"
+                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_url={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/"
                         >Register as a "System User"</a>
                     {% else %}
                         <a
@@ -151,7 +151,7 @@
                         </div>
                     </div>
                     <div class="submit">
-                        <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}register-redirect/">Register with custom parameters</a>
+                        <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/">Register with custom parameters</a>
                     </div>
                 {% endcomment %}
             </div>
@@ -176,7 +176,7 @@
                 href += '&show2fa=true';
             }
             if (document.getElementById('redirect').checked) {
-                href += '&client_id={{ settings.OIDC_RP_CLIENT_ID}}&redirect_uri={{ settings.WAGTAIL_REDIRECT_URL|urlencode }}';
+                href += '&client_id={{ site.oidcsettings.oidc_rp_client_id}}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}';
             }
             // Required fields
             if (document.getElementById('first_name').checked) {

@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
+from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+
+from wagtail_client.models import OidcSettings
 
 
 class TestOIDCSessionMiddleware(TestCase):
@@ -15,6 +18,15 @@ class TestOIDCSessionMiddleware(TestCase):
         cls.user.set_password("L1lly")
         cls.user.save()
 
+        cls.site = Site.objects.get(name="example.com")
+        oidc_settings, created = OidcSettings.objects.update_or_create(
+            site=cls.site, defaults={
+                "oidc_rp_client_id": "foo",
+                "oidc_rp_client_secret": "bar",
+                "wagtail_redirect_url": "http://localhost/",
+                "oidc_rp_scopes": "openid profile email address phone site roles"
+            })
+
     def test_homepage_auth_logic(self):
         response = self.client.get(
             reverse("home")
@@ -24,4 +36,4 @@ class TestOIDCSessionMiddleware(TestCase):
         response = self.client.get(
             reverse("home")
         )
-        self.assertContains(response, self.user.email)
+        self.assertContains(response, self.site.name)
