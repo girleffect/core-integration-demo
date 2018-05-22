@@ -217,8 +217,3 @@ LOGGING = {
         },
     },
 }
-
-
-@property
-def TEST_ME():
-    return "Foo"
