@@ -93,7 +93,7 @@
                         <a
                             id="systemUserRedirectButton"
                             class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_url={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/"
+                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/"
                         >Register as a "System User"</a>
                     {% else %}
                         <a
