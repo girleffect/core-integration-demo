@@ -13,6 +13,7 @@
 {% endblock %}
 {% block extra_css %}
     {{ block.super }}
+    <link rel="stylesheet" href="{% static "wagtail_client/css/core_override.css" %}">
     {% if settings.SITE_CODE == "springster" %}
         <link rel="stylesheet" href="{% static "wagtail_client/css/springster.css" %}">
     {% elif settings.SITE_CODE == "ninyampinga" %}
@@ -21,56 +22,81 @@
 {% endblock %}
 
 {% block furniture %}
+    {# defaultDangoMessageFrameworkDisplay #}
     {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
+    {# end defaultDangoMessageFrameworkDisplay #}
+
     <div class="content-wrapper">
+        {# authenticatedUserIfCheck #}
+        <div class="content field-group">
+            <h3>Pick a theme for subsequent CTAs:</h3>
+            <p>Most CTAs will respect this theme. Login is setup elsewhere. Temp user creation does not support it.</p>
+            <select id="theme">
+                <option value="springster">Springster</option>
+                <option value="ninyampinga">Ninyampinga</option>
+                <option value="zathu">Zathu</option>
+                <option value="none">No theme</option>
+            </select>
+        </div>
         {% if user.is_authenticated %}
             <h1>Welcome <i>{{ user.first_name }}</i> to the {{ site.name }} home page</h1>
             <div class="content">
+                {# userData #}
                 {% if user.email %}
                     <h1>E-mail: {{ user.email }}</h1>
                 {% endif %}
+                {# end userData #}
+
+                {# userRolesDisplay #}
                 {% if user.groups.all %}
                     <h2>User has the following roles for {{ site.name }}:</h2>
                     {% for group in user.groups.all %}
                         <p>{{ group.name }}</p>
                     {% endfor %}
-                    {% for group in user.groups.all %}
-                        {% if group.name == "data_viewer"%}
-                            <p style="font-style:italic;font-size:20px;">This piece of content is only visible to users with the Data Viewer role on this application</p>
-                        {% endif %}
-                    {% endfor %}
                 {% endif %}
-                    <form action="{% url "oidc_logout" %}" method="post">
-                        {% csrf_token %}
-                        <div class="submit">
-                            <input class="button" type="submit" value="Logout" />
-                        </div>
-                    </form>
+                {# end userRolesDisplay #}
+
+                {# logoutForm #}
+                <form action="{% url "oidc_logout" %}" method="post">
+                    {% csrf_token %}
+                    <div class="submit">
+                        <input class="button" type="submit" value="Logout" />
+                    </div>
+                </form>
+                {# end logoutForm #}
+
+                {# editProfileButtons #}
                 <div class="submit">
-                    <a class="button" href="{{ settings.OIDC_OP }}/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}">Edit Profile</a>
+                    <a class="button"
+                        href="{{ settings.OIDC_OP }}/profile/edit/?client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}"
+                    >Edit Profile</a>
                 </div>
                 <h2>Try out different languages on the Authentication Service.</h2>
                 <p>The following links will take you to the edit profile page in the language indicated on the button.</p>
                 <div class="submit">
-                    <a class="button" href="{{ settings.OIDC_OP }}/af/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}">Afrikaans</a>
+                    <a class="button"
+                        href="{{ settings.OIDC_OP }}/af/profile/edit/?client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}"
+                    >Afrikaans</a>
                 </div>
                 <div class="submit">
-                    <a class="button" href="{{ settings.OIDC_OP }}/de/profile/edit/?theme={{ settings.SITE_CODE }}&client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}">German</a>
+                    <a class="button"
+                        href="{{ settings.OIDC_OP }}/de/profile/edit/?client_id={{ settings.OIDC_RP_CLIENT_ID }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}"
+                    >German</a>
                 </div>
+                {# end editProfileButtons #}
             </div>
         {% else %}
             <div class="content">
                 <h1>Welcome to the {{ site.name }} home page</h1>
                 <h2>Basic demo: Click and go</h2>
                 <p>
-                    Login functionality is the same for any user. System users will see an extra step where they need to
-                    provide their 2FA token.
+                    Login functionality is the same for any user.
                 </p>
                 <a class="button" href="{% url 'oidc_authentication_init' %}">Login</a>
                 <p>
@@ -80,82 +106,80 @@
                 <a class="button" href="{% url 'protected' %}">Go to a protected page</a>
                 <p>
                     Registration functionality can be tailored per site. Below we have 2 typical registration buttons, one
-                    for "end users" (2FA not required, less required fields) and "system users" (2FA required, more required
+                    for "end users" (less required fields) and "system users" (More required
                     fields, more stringent password requirements).
                 </p>
+
+                {# defaultRegistrationButtons #}
                 <div class="buttons">
-                    {% if settings.SITE_CODE == "ninyampinga" %}
-                        <a
-                            id="endUserRedirectButton"
-                            class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.settings.wagtail_redirect_url|urlencode }}register-redirect/"
-                        >Register as an "End User"</a>
-                        <a
-                            id="systemUserRedirectButton"
-                            class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender&client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/"
-                        >Register as a "System User"</a>
-                    {% else %}
-                        <a
-                            id="endUserRedirectButton"
-                            class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?theme={{ settings.SITE_CODE }}&hide=end-user"
-                        >Register as an "End User"</a>
-                        <a
-                            id="systemUserRedirectButton"
-                            class="button"
-                            href="{{ settings.OIDC_OP }}/registration/?security=high&theme={{ settings.SITE_CODE }}&requires=first_name&requires=last_name&requires=gender"
-                        >Register as a "System User"</a>
-                    {% endif %}
+                    <a
+                        id="endUserRegisterButton"
+                        class="button"
+                        href="{{ settings.OIDC_OP }}/registration/?hide=end-user"
+                    >Register as an "End User"</a>
+                    <a
+                        id="systemUserRegisterButton"
+                        class="button"
+                        href="{{ settings.OIDC_OP }}/registration/?security=high&requires=first_name&requires=last_name&requires=gender"
+                    >Register as a "System User"</a>
                 </div>
-                {% comment %}
-                    TODO once sure how we want to demo it, a management command should suffice, wagtail can build pages.
-                {% endcomment %}
-                {% comment %}
-                    THE ADVANCED DEMO IS HIDDEN AS PER GE-1005. CAN EASILY BE RECOVERED BY UNCOMMENTING
-                    <h2>Advanced demo: customise the registration experience</h2>
-                    <div>
-                        <div class="field-group">
-                            <h3>Toggle some options:</h3>
-                            <input id="security" type="checkbox" value="security" checked>High security<br>
-                            <input id="show2fa" type="checkbox" value="show2fa">Show two factor auth<br>
-                            <input id="redirect" type="checkbox" value="redirect" checked>Redirect back here?<br>
-                        </div>
-                        <div class="field-group">
-                            <h3>Pick a theme:</h3>
-                            <select id="theme">
-                                <option value="springster">Springster</option>
-                                <option value="ninyampinga">Ninyampinga</option>
-                                <option value="none">No theme</option>
-                            </select>
-                        </div>
-                        <div class="field-group">
-                            <h3>Make some optional fields required:</h3>
-                            <input id="first_name" type="checkbox" value="first_name">First Name<br>
-                            <input id="last_name" type="checkbox" value="last_name">Last name<br>
-                            <input id="nickname" type="checkbox" value="nickname">Nickname<br>
-                            <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
-                            <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
-                            <input id="gender" type="checkbox" value="gender">Gender<br>
-                            <input id="avatar" type="checkbox" value="avatar">Avatar<br>
-                        </div>
-                        <div class="field-group">
-                            <h3>Hide some optional fields (ones you flagged as required will be ignored):</h3>
-                            <input id="first_name_hide" type="checkbox" value="first_name_hide">First Name<br>
-                            <input id="last_name_hide" type="checkbox" value="last_name_hide">Last name<br>
-                            <input id="nickname_hide" type="checkbox" value="nickname_hide">Nickname<br>
-                            <input id="msisdn_hide" type="checkbox" value="msisdn_hide">MSISDN<br>
-                            <input id="birth_date_hide" type="checkbox" value="birth_date_hide">Birth date<br>
-                            <input id="gender_hide" type="checkbox" value="gender_hide">Gender<br>
-                            <input id="avatar_hide" type="checkbox" value="avatar_hide">Avatar<br>
-                        </div>
-                    </div>
-                    <div class="submit">
-                        <a id="customRedirectButton" class="button" href="{{ settings.OIDC_OP }}/registration/?client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/">Register with custom parameters</a>
-                    </div>
-                {% endcomment %}
+                {# end defaultRegistrationButtons #}
             </div>
+
+            {# advancedRegistration #}
+            <div class="content customForm">
+                <h2>Migration user: </h2>
+                <p>Create a temporary user that can be used to test the user migration login flows.
+                Client field will need to map to this id: <b>{{ site.oidcsettings.oidc_rp_client_id }}</b>
+                </p>
+                <p><i>Will need to login as an admin user</i></p>
+                <a
+                    id="systemUserRegisterButton"
+                    class="button"
+                    href="{{ settings.OIDC_OP }}/admin/user_migration/temporarymigrationuserstore/add/"
+                >Add Temp user</a>
+            </div>
+            {# end advancedRegistration #}
         {% endif %}
+        {# end authenticatedUserIfCheck #}
+
+        {# advancedRegistration #}
+        <div id="noJsError" class="content"><p>To make use of the custom registration form, please enable JavaScript</p></div>
+        <div id="customForm" class="content customForm" style="display:none;">
+            <h2>Advanced demo: customise the registration experience</h2>
+            <div id="customRegistration">
+                <div class="field-group">
+                    <h3>Toggle some options:</h3>
+                    <input id="security" type="checkbox" value="security" checked>High security<br>
+                    {# <input id="show2fa" type="checkbox" value="show2fa">Show two factor auth<br> #}
+                    <input id="redirect" type="checkbox" value="redirect" checked>Redirect back here?<br>
+                </div>
+                <div id="required_fields" class="field-group">
+                    <h3>Make some optional fields required:</h3>
+                    <input id="first_name" type="checkbox" value="first_name">First Name<br>
+                    <input id="last_name" type="checkbox" value="last_name">Last name<br>
+                    <input id="msisdn" type="checkbox" value="msisdn">MSISDN<br>
+                    <input id="birth_date" type="checkbox" value="birth_date">Birth date<br>
+                    <input id="gender" type="checkbox" value="gender">Gender<br>
+                    <input id="avatar" type="checkbox" value="avatar">Avatar<br>
+                </div>
+                <div id="hidden_fields" class="field-group">
+                    <h3>Hide some optional fields (ones you flagged as required will be ignored):</h3>
+                    <input id="first_name_hide" type="checkbox" value="first_name">First Name<br>
+                    <input id="last_name_hide" type="checkbox" value="last_name">Last name<br>
+                    <input id="msisdn_hide" type="checkbox" value="msisdn">MSISDN<br>
+                    <input id="birth_date_hide" type="checkbox" value="birth_date">Birth date<br>
+                    <input id="gender_hide" type="checkbox" value="gender">Gender<br>
+                    <input id="avatar_hide" type="checkbox" value="avatar">Avatar<br>
+                </div>
+            </div>
+            <div class="submit">
+                <a id="customRedirectButton" class="button"
+                    href="{{ settings.OIDC_OP }}/registration/?client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/"
+                >Register with custom parameters</a>
+            </div>
+        </div>
+        {# end advancedRegistration #}
     </div>
 {% endblock %}
 {% block extra_js %}
@@ -164,63 +188,52 @@
     // Hard coded like this is fine for demo purposes.
     // TODO The redirect urls will need to be updated from context later on.
     document.addEventListener('DOMContentLoaded', function(event) {
+        // To reduce confusing, display a basic error if js is disabled.
+        document.getElementById('noJsError').style.display = 'none';
+        document.getElementById('customForm').style.display = 'block';
+
+        // Theme query paramater is added to each element that has a button class and is an anchor tag.
+        for (let button of document.getElementsByClassName('button')) {
+            if (button.tagName == 'A') {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault()
+                    let theme = document.getElementById('theme').value;
+                    let href = (button.href.indexOf('?') >= 0) ? button.href + '&theme=' + theme : button.href + '?theme=' + theme
+                    console.info(href);
+                    window.location.href = href;
+                });
+            }
+        }
+
         document.getElementById('customRedirectButton').addEventListener('click', function(e) {
             e.preventDefault()
-            var href = '{{ settings.OIDC_OP }}/registration/';
-            var theme = document.getElementById('theme').value;
+            let theme = document.getElementById('theme').value;
+            let href = '{{ settings.OIDC_OP }}/registration/';
             href += '?theme=' + theme;
             if (document.getElementById('security').checked) {
                 href += '&security=high';
             }
-            if (document.getElementById('show2fa').checked) {
-                href += '&show2fa=true';
-            }
+            //if (document.getElementById('show2fa').checked) {
+            //    href += '&show2fa=true';
+            //}
             if (document.getElementById('redirect').checked) {
                 href += '&client_id={{ site.oidcsettings.oidc_rp_client_id}}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}';
             }
+
             // Required fields
-            if (document.getElementById('first_name').checked) {
-                href += '&requires=first_name';
+            for (let input of document.getElementById('required_fields').getElementsByTagName('input')) {
+                if (input.checked) {
+                    console.log(input)
+                    href += '&requires=' + input.value;
+                }
             }
-            if (document.getElementById('last_name').checked) {
-                href += '&requires=last_name';
-            }
-            if (document.getElementById('nickname').checked) {
-                href += '&requires=nickname';
-            }
-            if (document.getElementById('msisdn').checked) {
-                href += '&requires=msisdn';
-            }
-            if (document.getElementById('birth_date').checked) {
-                href += '&requires=birth_date';
-            }
-            if (document.getElementById('gender').checked) {
-                href += '&requires=gender';
-            }
-            if (document.getElementById('avatar').checked) {
-                href += '&requires=avatar';
-            }
+
             // Hidden fields
-            if (document.getElementById('first_name_hide').checked && !document.getElementById('first_name').checked) {
-                href += '&hide=first_name';
-            }
-            if (document.getElementById('last_name_hide').checked && !document.getElementById('last_name').checked) {
-                href += '&hide=last_name';
-            }
-            if (document.getElementById('nickname_hide').checked && !document.getElementById('nickname').checked) {
-                href += '&hide=nickname';
-            }
-            if (document.getElementById('msisdn_hide').checked && !document.getElementById('msisdn').checked) {
-                href += '&hide=msisdn';
-            }
-            if (document.getElementById('birth_date_hide').checked && !document.getElementById('birth_date').checked) {
-                href += '&hide=birth_date';
-            }
-            if (document.getElementById('gender_hide').checked && !document.getElementById('gender').checked) {
-                href += '&hide=gender';
-            }
-            if (document.getElementById('avatar_hide').checked && !document.getElementById('avatar').checked ) {
-                href += '&hide=avatar';
+            for (let input of document.getElementById('hidden_fields').getElementsByTagName('input')) {
+                if (input.checked) {
+                    console.log(input)
+                    href += '&hide=' + input.value;
+                }
             }
             console.info(href);
             window.location.href = href
