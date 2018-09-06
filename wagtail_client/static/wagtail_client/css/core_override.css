@@ -1,6 +1,6 @@
-.content {
+div.content {
     min-height: 0%;
-    padding-bottom: 0em;
+    padding-bottom: 2em;
 }
 
 .customForm{

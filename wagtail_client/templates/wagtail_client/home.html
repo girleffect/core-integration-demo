@@ -149,10 +149,15 @@
             <h2>Advanced demo: customise the registration experience</h2>
             <div id="customRegistration">
                 <div class="field-group">
-                    <h3>Toggle some options:</h3>
-                    <input id="security" type="checkbox" value="security" checked>High security<br>
+                    <h3>Toggle high security:</h3>
+                    <input id="security" type="checkbox" value="security">High security<br>
                     {# <input id="show2fa" type="checkbox" value="show2fa">Show two factor auth<br> #}
-                    <input id="redirect" type="checkbox" value="redirect" checked>Redirect back here?<br>
+                </div>
+                <div class="field-group">
+                    <h3>Alter redirect values:</h3>
+                    <b>Redirect uri:</b><input id="redirect-uri" type="text" value="{{ site.oidcsettings.wagtail_redirect_url }}" name="redirect-uri"></input><br>
+                    <b>Pass client id along?</b><input id="add-client-id" type="checkbox" value="add-client-id" checked>
+                    <p><i>NOTE:</i> Only relative urls will NOT require the client_id. Passing the client id will ALWAYS attempt validation of the uri.</p>
                 </div>
                 <div id="required_fields" class="field-group">
                     <h3>Make some optional fields required:</h3>
@@ -175,7 +180,7 @@
             </div>
             <div class="submit">
                 <a id="customRedirectButton" class="button"
-                    href="{{ settings.OIDC_OP }}/registration/?client_id={{ site.oidcsettings.oidc_rp_client_id }}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}register-redirect/"
+                    href="#"
                 >Register with custom parameters</a>
             </div>
         </div>
@@ -196,11 +201,11 @@
         for (let button of document.getElementsByClassName('button')) {
             if (button.tagName == 'A') {
                 button.addEventListener('click', function(e) {
-                    e.preventDefault()
                     let theme = document.getElementById('theme').value;
                     let href = (button.href.indexOf('?') >= 0) ? button.href + '&theme=' + theme : button.href + '?theme=' + theme
-                    console.info(href);
-                    window.location.href = href;
+                    console.info("Updated href:", href);
+                    button.href = href;
+                    return e;
                 });
             }
         }
@@ -213,11 +218,13 @@
             if (document.getElementById('security').checked) {
                 href += '&security=high';
             }
-            //if (document.getElementById('show2fa').checked) {
-            //    href += '&show2fa=true';
-            //}
-            if (document.getElementById('redirect').checked) {
-                href += '&client_id={{ site.oidcsettings.oidc_rp_client_id}}&redirect_uri={{ site.oidcsettings.wagtail_redirect_url|urlencode }}';
+
+            // Redirect additions
+            if (document.getElementById('redirect-uri').value != '') {
+                href += '&redirect_uri=' + encodeURIComponent(document.getElementById('redirect-uri').value)
+            }
+            if (document.getElementById('add-client-id').checked) {
+                href += '&client_id={{ site.oidcsettings.oidc_rp_client_id}}';
             }
 
             // Required fields
@@ -235,7 +242,7 @@
                     href += '&hide=' + input.value;
                 }
             }
-            console.info(href);
+            console.info("Updated href:", href);
             window.location.href = href
         });
     });
