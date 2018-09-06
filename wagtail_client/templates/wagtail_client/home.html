@@ -33,8 +33,8 @@
     {# end defaultDangoMessageFrameworkDisplay #}
 
     <div class="content-wrapper">
-        {# authenticatedUserIfCheck #}
         <div class="content field-group">
+            <p class="customForm">Login to view user roles, register new users(default or customised experience). Convenience links for edit profile, when logged in, and migration user creation.</p>
             <h3>Pick a theme for subsequent CTAs:</h3>
             <p>Most CTAs will respect this theme. Login is setup elsewhere. Temp user creation does not support it.</p>
             <select id="theme">
@@ -44,6 +44,8 @@
                 <option value="none">No theme</option>
             </select>
         </div>
+
+        {# authenticatedUserIfCheck #}
         {% if user.is_authenticated %}
             <h1>Welcome <i>{{ user.first_name }}</i> to the {{ site.name }} home page</h1>
             <div class="content">
@@ -126,20 +128,6 @@
                 {# end defaultRegistrationButtons #}
             </div>
 
-            {# advancedRegistration #}
-            <div class="content customForm">
-                <h2>Migration user: </h2>
-                <p>Create a temporary user that can be used to test the user migration login flows.
-                Client field will need to map to this id: <b>{{ site.oidcsettings.oidc_rp_client_id }}</b>
-                </p>
-                <p><i>Will need to login as an admin user</i></p>
-                <a
-                    id="systemUserRegisterButton"
-                    class="button"
-                    href="{{ settings.OIDC_OP }}/admin/user_migration/temporarymigrationuserstore/add/"
-                >Add Temp user</a>
-            </div>
-            {# end advancedRegistration #}
         {% endif %}
         {# end authenticatedUserIfCheck #}
 
@@ -177,6 +165,7 @@
                     <input id="gender_hide" type="checkbox" value="gender">Gender<br>
                     <input id="avatar_hide" type="checkbox" value="avatar">Avatar<br>
                 </div>
+                <p>If oddities arise on the auth service registration forms, most likely fields not hiding or still being required after being hidden. Clear the local browser cache on the auth service fully and try again.</p>
             </div>
             <div class="submit">
                 <a id="customRedirectButton" class="button"
@@ -185,6 +174,31 @@
             </div>
         </div>
         {# end advancedRegistration #}
+
+        {# migrationUserCreation #}
+        <div class="content customForm">
+            <h2>Migration user: </h2>
+            <p>Create a temporary user that can be used to test the user migration login flows.
+            Client field will need to map to this id: <b>{{ site.oidcsettings.oidc_rp_client_id }}</b>
+            </p>
+            <p><i>Will need to login as an admin user</i></p>
+            <a
+                id="systemUserRegisterButton"
+                class="button"
+                href="{{ settings.OIDC_OP }}/admin/user_migration/temporarymigrationuserstore/add/"
+            >Add Temp user</a>
+            <p>Ensure you are logged out of the authentication service. Once you attempt to login with the newly created migration user, from this site, you should end up on the migration wizard.
+            </p>
+            {# logoutForm #}
+            <form action="{% url "oidc_logout" %}" method="post">
+                {% csrf_token %}
+                <div class="submit">
+                    <input class="button" type="submit" value="Logout" />
+                </div>
+            </form>
+            {# end logoutForm #}
+        </div>
+        {# end migrationUserCreation #}
     </div>
 {% endblock %}
 {% block extra_js %}
