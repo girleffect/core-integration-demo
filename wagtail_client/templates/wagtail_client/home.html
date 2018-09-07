@@ -43,6 +43,17 @@
                 <option value="zathu">Zathu</option>
                 <option value="none">No theme</option>
             </select>
+            <p>
+                Most CTAs will respect this language. Login is setup elsewhere. Temp user creation does not support it.
+                <i>NOTE: If you pick a langauge that there is not po file, for the auth service will 404.</i>
+            </p>
+            <select id="language">
+                <option value="">----------</option>
+                <option value="en">English</option>
+                <option value="af">Afrikaans</option>
+                <option value="de">German</option>
+                <option value="en-you">English Springster youth</option>
+            </select>
         </div>
 
         {# authenticatedUserIfCheck #}
@@ -178,8 +189,9 @@
         {# migrationUserCreation #}
         <div class="content customForm">
             <h2>Migration user: </h2>
-            <p>Create a temporary user that can be used to test the user migration login flows.
-            Client field will need to map to this id: <b>{{ site.oidcsettings.oidc_rp_client_id }}</b>
+            <p>
+                Create a temporary user that can be used to test the user migration login flows.
+                Client field will need to map to this id: <b>{{ site.oidcsettings.oidc_rp_client_id }}</b>
             </p>
             <p><i>Will need to login as an admin user</i></p>
             <a
@@ -187,7 +199,8 @@
                 class="button"
                 href="{{ settings.OIDC_OP }}/admin/user_migration/temporarymigrationuserstore/add/"
             >Add Temp user</a>
-            <p>Ensure you are logged out of the authentication service. Once you attempt to login with the newly created migration user, from this site, you should end up on the migration wizard.
+            <p>
+                Ensure you are logged out of the authentication service. Once you attempt to login with the newly created migration user, from this site, you should end up on the migration wizard.
             </p>
             {# logoutForm #}
             <form action="{% url "oidc_logout" %}" method="post">
@@ -216,7 +229,9 @@
             if (button.tagName == 'A') {
                 button.addEventListener('click', function(e) {
                     let theme = document.getElementById('theme').value;
-                    let href = (button.href.indexOf('?') >= 0) ? button.href + '&theme=' + theme : button.href + '?theme=' + theme
+                    let language = document.getElementById('language').value;
+                    let href = (button.href.indexOf('?') >= 0) ? button.href + '&theme=' + theme : button.href + '?theme=' + theme;
+                    href += (language != '') ? '&language=' + language : '';
                     console.info("Updated href:", href);
                     button.href = href;
                     return e;
@@ -226,6 +241,7 @@
 
         document.getElementById('customRedirectButton').addEventListener('click', function(e) {
             e.preventDefault()
+            let language = document.getElementById('language').value;
             let theme = document.getElementById('theme').value;
             let href = '{{ settings.OIDC_OP }}/registration/';
             href += '?theme=' + theme;
@@ -241,10 +257,12 @@
                 href += '&client_id={{ site.oidcsettings.oidc_rp_client_id}}';
             }
 
+            // Language
+            href += (language != '') ? '&language=' + language : '';
+
             // Required fields
             for (let input of document.getElementById('required_fields').getElementsByTagName('input')) {
                 if (input.checked) {
-                    console.log(input)
                     href += '&requires=' + input.value;
                 }
             }
@@ -252,7 +270,6 @@
             // Hidden fields
             for (let input of document.getElementById('hidden_fields').getElementsByTagName('input')) {
                 if (input.checked) {
-                    console.log(input)
                     href += '&hide=' + input.value;
                 }
             }
