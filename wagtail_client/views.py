@@ -5,11 +5,13 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import never_cache
 from django.views.generic import (
     TemplateView,
     RedirectView
 )
-from mozilla_django_oidc.views import OIDCAuthenticationRequestView, OIDCAuthenticationCallbackView
+from mozilla_django_oidc.views import OIDCAuthenticationRequestView, OIDCAuthenticationCallbackView, \
+    OIDCLogoutView
 
 
 class HomePageView(TemplateView):
@@ -38,6 +40,7 @@ class ProtectedPageView(TemplateView):
         return context
 
 
+@method_decorator(never_cache, "dispatch")
 class LoginRedirectWithQueryStringView(RedirectView):
     """
     This view is used when a user needs to be redirected to the Authentication Service
@@ -139,3 +142,13 @@ class CustomAuthenticationCallbackView(OIDCAuthenticationCallbackView):
         The request is available in self.request.
         """
         return super().success_url
+
+
+@method_decorator(never_cache, "get")
+class LogoutRedirectView(OIDCLogoutView):
+    # The LogoutView is usually accessed via a POST. When accessing it
+    # via GET it must never be cached.
+
+    def get(self, request):
+        return self.post(request)
+
