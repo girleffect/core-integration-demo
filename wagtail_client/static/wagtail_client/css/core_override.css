@@ -1,0 +1,9 @@
+div.content {
+    min-height: 0%;
+    padding-bottom: 2em;
+}
+
+.customForm{
+    padding-top: 2%;
+    background: #f3f3f3;
+}
