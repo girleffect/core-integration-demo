@@ -111,6 +111,21 @@ class CustomAuthenticationRequestView(OIDCAuthenticationRequestView):
             raise RuntimeError(f"Site {site} has no settings configured.")
 
         params.update(site.oidcsettings.extra_params)
+        try:
+            language = request.GET["language"]
+            params["language"] = language
+        except KeyError:
+            pass
+
+        try:
+            theme = request.GET["theme"]
+            if theme == "none":
+                params.pop("theme", None)
+            else:
+                params["theme"] = theme
+        except KeyError:
+            pass
+
         return params
 
 
